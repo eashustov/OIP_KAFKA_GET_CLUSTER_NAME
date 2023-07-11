@@ -1,5 +1,5 @@
 {
-  "frontendFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/./frontend",
+  "frontendFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/frontend",
   "themeFolder": "themes",
   "themeResourceFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/frontend",
   "staticOutput": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/classes/META-INF/VAADIN/webapp/VAADIN/static",

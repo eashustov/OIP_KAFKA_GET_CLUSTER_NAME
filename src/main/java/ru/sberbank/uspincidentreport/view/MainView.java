@@ -92,7 +92,7 @@ public class MainView extends VerticalLayout {
 //        // Cleanup
 //        thread.interrupt();
 //        thread = null;
-//    }
+//    }PUBLIC
 
 
     public MainView(OIPKafkaRepo repo) throws IOException {
@@ -103,7 +103,7 @@ public class MainView extends VerticalLayout {
         end_Date.setMax(now);
         end_Date.setValue(now);
         start_Date.setMax(now);
-        start_Date.setValue(now.minusMonths(1));
+        start_Date.setValue(now.minusWeeks(2));
         start_Date.addValueChangeListener(e -> end_Date.setMin(e.getValue()));
         end_Date.addValueChangeListener(e -> start_Date.setMax(e.getValue()));
         end_Date.setMin(start_Date.getValue());
@@ -247,7 +247,7 @@ public class MainView extends VerticalLayout {
                 .addColumn(OIPKafkaData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
         AS_KE.setVisible(false);
 
-        GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findAll());
+        GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
         personFilter = new PersonFilter(dataView);
 
         //Create headers for Grid
@@ -436,6 +436,13 @@ public class MainView extends VerticalLayout {
 
 //        Добавление компонентов в основной layout
           add(header, dateLayout, actions , grid, serversCount, markedCount);
+
+        //      Обработчик копки получения списка серверов
+        buttonGetData.addClickListener(event->{
+            grid.setItems(repo.findServerByDate(startDate, endDate));
+            grid.getDataProvider().refreshAll();
+        });
+
 
 
 //        countRefresh(counter);
