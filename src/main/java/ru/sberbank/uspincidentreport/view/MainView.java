@@ -18,6 +18,7 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H4;
@@ -143,7 +144,7 @@ public class MainView extends VerticalLayout {
         });
 
 
-//        IncidentContextMenu incContextMenu = new IncidentContextMenu(grid);
+        ItemContextMenu itemContextMenu = new ItemContextMenu(grid);
         Grid.Column<OIPKafkaData> HOST_NAME = grid
                 .addColumn(OIPKafkaData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
         Grid.Column<OIPKafkaData> HOST_IP = grid
@@ -173,7 +174,7 @@ public class MainView extends VerticalLayout {
                             });
                             //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
                             checkboxHeader_7000.addValueChangeListener(event->{
-                                OIPKafkaData.setPORT_7010(event.getValue());
+                                OIPKafkaData.setPORT_7000(event.getValue());
                                 checkbox_7000.setValue(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
                                 clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
@@ -215,7 +216,8 @@ public class MainView extends VerticalLayout {
                             });
                             return checkbox_7010;
                         }
-                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт zookeeper (7010)");
+                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт zookeeper (7010)")
+                .setKey("PORT_7010");
         Grid.Column<OIPKafkaData> HOST_DOMAIN = grid
                 .addColumn(OIPKafkaData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
         Grid.Column<OIPKafkaData> HOST_KE = grid
@@ -388,7 +390,6 @@ public class MainView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Порт kafka (7000)", PORT_7000);
         columnToggleContextMenu.addColumnToggleItem("Порт zookeeper (7010)", PORT_7010);
         columnToggleContextMenu.addColumnToggleItem("Домен", HOST_DOMAIN);
-//        columnToggleContextMenu.addColumnToggleItem("Версия kafka", KAFKA_VERSION);
         columnToggleContextMenu.addColumnToggleItem("КЭ сервера", HOST_KE);
         columnToggleContextMenu.addColumnToggleItem("Группа сопровождения ОС", OS_ADMIN);
         columnToggleContextMenu.addColumnToggleItem("КЭ кластера", KAFKA_KE);
@@ -540,7 +541,6 @@ public class MainView extends VerticalLayout {
         private Boolean port_7000;
         private Boolean port_7010;
         private String hostDomain;
-//        private String kafkaVersion;
         private String hostKE;
         private String OSAdmin;
         private String kafkaKE;
@@ -645,32 +645,17 @@ public class MainView extends VerticalLayout {
     }
 }
 
-//    public static class IncidentContextMenu extends GridContextMenu<OIPKafkaData> {
-//        public IncidentContextMenu(Grid<OIPKafkaData> target) {
-//            super(target);
-//
-//            addItem("Сценарий устранения в RLM", e -> e.getItem().ifPresent(incident -> {
-//                if (!incident.getRESOLUTION().equals("")) {
-//                    getUI().get().getPage().open(incident.getRESOLUTION(), "Сценарий устранения в RLM");
-//                } else {Notification.show("Нет сценариев RLM для устранения автоинцидента", 1000, Notification.Position.MIDDLE);}
-//                // System.out.printf("Edit: %s%n", person.getFullName());
-//            }));
-//            addItem("Инструкция для устранения автоинцидента", e -> e.getItem().ifPresent(incident -> {
-//                if (!incident.getRESOLUTION_GUIDE().equals("")) {
-//                    getUI().get().getPage().open(incident.getRESOLUTION_GUIDE(), "Инструкция для устранения автоинцидента");
-//                } else {Notification.show("Нет инструкции для устранения автоинцидента", 1000, Notification.Position.MIDDLE);}
-//                // System.out.printf("Edit: %s%n", person.getFullName());
-//            }));
-//            addItem("История в Zabbix", e -> e.getItem().ifPresent(incident -> {
-//                getUI().get().getPage().open(incident.getZABBIX_HISTORY(), "История в Zabbix");
-//            }));
-//            addItem("Открыть в Service Manager", e -> e.getItem().ifPresent(incident -> {
-//                getUI().get().getPage().open(
-//                        "https://servicemanager.ca.sbrf.ru/hpsm/index.do?lang=ru&ctx=docEngine&file=probsummary&query=number%3D%22" + incident.getNUMBER() + "%22&action=&title=",
-//                        "Открыть в Service Manager");
-//            }));
-//        }
-//    }
+    class ItemContextMenu extends GridContextMenu<OIPKafkaData> {
+        public ItemContextMenu(Grid<OIPKafkaData> target) {
+            super(target);
+
+            addItem("Сканировать порты", e -> e.getItem().ifPresent(incident -> {
+                getUI().get().getPage().open(
+                        "https://nlb-jenkins/cis/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
+                        "Сканировать порты");
+            }));
+        }
+    }
 
 //    private class RefreshThread extends Thread {
 //        private final UI ui;

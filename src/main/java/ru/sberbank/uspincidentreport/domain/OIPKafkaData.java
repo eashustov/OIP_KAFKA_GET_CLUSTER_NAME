@@ -53,7 +53,6 @@ public class OIPKafkaData {
         this.PORT_7000 = PORT_7000;
         this.PORT_7010 = PORT_7010;
         this.HOST_DOMAIN = HOST_DOMAIN;
-//        this.KAFKA_VERSION = KAFKA_VERSION;
         this.HOST_KE = HOST_KE;
         this.OS_ADMIN = OS_ADMIN;
         this.KAFKA_KE = KAFKA_KE;
