@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ru.sberbank.uspincidentreport.MqtivolireportApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.835 s - in ru.sberbank.uspincidentreport.MqtivolireportApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.394 s - in ru.sberbank.uspincidentreport.MqtivolireportApplicationTests

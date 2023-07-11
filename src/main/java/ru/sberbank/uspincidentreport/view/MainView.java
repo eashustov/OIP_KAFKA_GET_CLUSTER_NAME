@@ -225,7 +225,7 @@ public class MainView extends VerticalLayout {
         Grid.Column<OIPKafkaData> OS_ADMIN = grid
                 .addColumn(OIPKafkaData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
         Grid.Column<OIPKafkaData> KAFKA_KE = grid
-                .addColumn(OIPKafkaData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ стенда");
+                .addColumn(OIPKafkaData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ кластера");
         KAFKA_KE.setVisible(false);
         Grid.Column<OIPKafkaData> KAFKA_NAME = grid
                 .addColumn(OIPKafkaData::getKAFKA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
@@ -239,7 +239,7 @@ public class MainView extends VerticalLayout {
                 .addColumn(OIPKafkaData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
         Grid.Column<OIPKafkaData> CREATED_BY_DATE = grid
                 .addColumn(OIPKafkaData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
-        CREATED_BY_DATE.setVisible(false);
+        CREATED_BY_DATE.setVisible(true);
         Grid.Column<OIPKafkaData> J_PROVIDING_UNIT_NAME = grid
                 .addColumn(OIPKafkaData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
         J_PROVIDING_UNIT_NAME.setVisible(false);
@@ -285,6 +285,8 @@ public class MainView extends VerticalLayout {
                 .setComponent(createFilterHeader("КЭ АС", personFilter::setAS_KE));
         headerRow.getCell(AS_NAME)
                 .setComponent(createFilterHeader("Название АС", personFilter::setASName));
+        headerRow.getCell(CREATED_BY_DATE)
+                .setComponent(createFilterHeader("Название АС", personFilter::setCreatedByDate));
 
 //        Export to CSV list of kafka servers
         var streamResource = new StreamResource("kafkaServers.csv",
@@ -397,6 +399,7 @@ public class MainView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Группа сопровождения", ASSIGNMENT_GROUP);
         columnToggleContextMenu.addColumnToggleItem("КЭ АС", AS_KE);
         columnToggleContextMenu.addColumnToggleItem("Название АС", AS_NAME);
+        columnToggleContextMenu.addColumnToggleItem("Дата выдачи", CREATED_BY_DATE);
 
 
         //Кнопка обновления
@@ -440,7 +443,8 @@ public class MainView extends VerticalLayout {
         //      Обработчик копки получения списка серверов
         buttonGetData.addClickListener(event->{
             grid.setItems(repo.findServerByDate(startDate, endDate));
-            grid.getDataProvider().refreshAll();
+            grid.setEnabled(false);
+            grid.setEnabled(true);
         });
 
 
@@ -555,6 +559,7 @@ public class MainView extends VerticalLayout {
         private String assignmentGroup;
         private String AS_KE;
         private String ASName;
+        private String CreatedByDate;
 
         public PersonFilter(GridListDataView<OIPKafkaData> dataView) {
             this.dataViewFiltered = dataView;
@@ -611,6 +616,10 @@ public class MainView extends VerticalLayout {
             this.dataViewFiltered.refreshAll();
         }
 
+        public void setCreatedByDate(String CreatedByDate) {
+            this.CreatedByDate = CreatedByDate;
+            this.dataViewFiltered.refreshAll();
+        }
 
 
         public boolean test(OIPKafkaData oipKafkaData) {
@@ -624,10 +633,11 @@ public class MainView extends VerticalLayout {
             boolean matchesAssignmentGroup = matches(oipKafkaData.getASSIGNMENT_GROUP(), assignmentGroup);
             boolean matchesAS_KE = matches(oipKafkaData.getAS_KE(), AS_KE);
             boolean matchesASName = matches(oipKafkaData.getAS_NAME(), ASName);
+            boolean matchesCreatedByDate = matches(oipKafkaData.getCREATED_BY_DATE(), CreatedByDate);
 
             return matchesHostName && matchesHostIP && matchesHostDomain && matchesHostKE &&
                     matchesOSAdmin && matchesKafkaKE && matchesKafkaName && matchesAssignmentGroup &&
-                    matchesAS_KE && matchesASName;
+                    matchesAS_KE && matchesASName && matchesCreatedByDate;
         }
 
         private boolean matches(String value, String searchTerm) {
