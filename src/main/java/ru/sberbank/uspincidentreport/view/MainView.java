@@ -143,10 +143,10 @@ public class MainView extends VerticalLayout {
         SubMenu styleSubMenu = style.getSubMenu();
         MenuItem normal = styleSubMenu.addItem("Нормальный");
         normal.setCheckable(true);
-        normal.setChecked(true);
+        normal.setChecked(false);
         MenuItem compact = styleSubMenu.addItem("Компактный");
         compact.setCheckable(true);
-        compact.setChecked(false);
+        compact.setChecked(true);
 
         ComponentEventListener<ClickEvent<MenuItem>> NormalStylelistener = e -> {
             if (e.getSource().isChecked()) {
@@ -199,18 +199,22 @@ public class MainView extends VerticalLayout {
         //        Добавление компонентов в основной layout
         add(header, dateLayout, actions, grid, serversCount, markedCount);
 
+
         //      Обработчик копки получения списка серверов
         buttonGetData.addClickListener(event -> {
             remove(grid, serversCount, markedCount);
             gridInit();
             serversCount.setText("Всего серверов: " + dataView.getItemCount());
             clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
-            markedCount.setText(String.valueOf("Выделено серверов: " + selectedKafkaServers.size()));
+            markedCount.setText("Выделено серверов: 0");
             add(grid, serversCount, markedCount);
         });
     }
 
+
     void gridInit() {
+        startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
+        endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
         this.grid = new Grid<>(OIPKafkaData.class, false);
         this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
@@ -219,7 +223,7 @@ public class MainView extends VerticalLayout {
 //Grid View
         grid = new Grid<>(OIPKafkaData.class, false);
         grid.setHeight("500px");
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
+        grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
         grid.setColumnReorderingAllowed(true);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
