@@ -212,7 +212,7 @@ public class MainView extends VerticalLayout {
 
     void gridInit() {
         this.grid = new Grid<>(OIPKafkaData.class, false);
-        this.dataView = grid.setItems((Collection<OIPKafkaData>) grid.setItems(repo.findServerByDate(startDate, endDate)));
+        this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
