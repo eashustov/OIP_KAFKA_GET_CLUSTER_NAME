@@ -32,6 +32,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
@@ -48,6 +49,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -65,7 +67,7 @@ public class MainView extends VerticalLayout {
     private OIPKafkaRepo repo;
     public static Grid<OIPKafkaData> grid;
     private GridListDataView<OIPKafkaData> dataView;
-//    private RefreshThread thread;
+    //    private RefreshThread thread;
     PersonFilter personFilter;
     String startDate;
     String endDate;
@@ -77,25 +79,11 @@ public class MainView extends VerticalLayout {
     private Span markedCount = new Span();
     Checkbox checkboxHeader_7000;
     Checkbox checkboxHeader_7010;
-
-//    String assignmentGroup = readString(Paths.get("/home/eshustov/IdeaProjects/usp_incident_assignmentGroup.txt"));
-
-//    @Override
-//    protected void onAttach(AttachEvent attachEvent) {
-//        // Start the data feed thread
-//        thread = new RefreshThread(attachEvent.getUI(), this);
-//        thread.start();
-//    }
-//
-//    @Override
-//    protected void onDetach(DetachEvent detachEvent) {
-//        // Cleanup
-//        thread.interrupt();
-//        thread = null;
-//    }PUBLIC
+    //Создание панели инструментов
+    MenuBar menuBar = new MenuBar();
 
 
-    public MainView(OIPKafkaRepo repo) throws IOException {
+    public MainView(OIPKafkaRepo repo) {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         start_Date = new DatePicker("Начало");
@@ -117,8 +105,114 @@ public class MainView extends VerticalLayout {
 
         this.repo = repo;
         this.header = new H4("Серера Corax выданные из ДИ за период");
+
+        //        Export to CSV list of kafka servers
+        var streamResource = new StreamResource("kafkaServers.csv",
+                () -> {
+                    Stream<OIPKafkaData> OIPKafkaDataList = personFilter.dataViewFiltered.getItems();
+                    StringWriter output = new StringWriter();
+                    StatefulBeanToCsv<OIPKafkaData> beanToCSV = null;
+                    try {
+                        beanToCSV = new StatefulBeanToCsvBuilder<OIPKafkaData>(output)
+                                .withIgnoreField(OIPKafkaData.class, OIPKafkaData.class.getDeclaredField("KAFKA_NAME"))
+                                .build();
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        beanToCSV.write(OIPKafkaDataList);
+                        var contents = output.toString();
+                        return new ByteArrayInputStream(contents.getBytes());
+                    } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+        );
+
+        //Anchor block
+        Anchor downloadToCSV = new Anchor(streamResource, "Сохранить в CSV");
+        Button buttonDownloadCSV = new Button(new Icon(VaadinIcon.DOWNLOAD));
+        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
+        downloadToCSV.removeAll();
+        downloadToCSV.add(buttonDownloadCSV);
+
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY, MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_ICON);
+
+        MenuItem style = menuBar.addItem("Вид");
+        SubMenu styleSubMenu = style.getSubMenu();
+        MenuItem normal = styleSubMenu.addItem("Нормальный");
+        normal.setCheckable(true);
+        normal.setChecked(true);
+        MenuItem compact = styleSubMenu.addItem("Компактный");
+        compact.setCheckable(true);
+        compact.setChecked(false);
+
+        ComponentEventListener<ClickEvent<MenuItem>> NormalStylelistener = e -> {
+            if (e.getSource().isChecked()) {
+                grid.removeThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
+                grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
+                compact.setChecked(false);
+            }
+        };
+
+        ComponentEventListener<ClickEvent<MenuItem>> CompactStylelistener = e -> {
+            if (e.getSource().isChecked()) {
+                grid.removeThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
+                grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
+                normal.setChecked(false);
+            }
+        };
+
+        normal.addClickListener(NormalStylelistener);
+        compact.addClickListener(CompactStylelistener);
+
+        menuBar.addItem(downloadToCSV);
+        menuBar.addItem("Столбцы");
+
+        //Кнопка получения имен кластеров
+        clusterNameDownloadToCSV = new Anchor(CreateKafkaClusterName.getKafkaClusterName(), "Получить имена кластеров для Zabbix");
+        clusterNameDownloadToCSV.setTarget("_blank");
+        Button buttonGetKafkaClustersName = new Button();
+//        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
+        clusterNameDownloadToCSV.removeAll();
+        clusterNameDownloadToCSV.add(buttonGetKafkaClustersName);
+        buttonGetKafkaClustersName.setText("Получить имена кластеров для Zabbix");
+        buttonGetKafkaClustersName.setEnabled(true);
+
+        // build top HorizontalLayout
+        HorizontalLayout actions = new HorizontalLayout(menuBar);
+        actions.setVerticalComponentAlignment(Alignment.END, menuBar);
+        setHorizontalComponentAlignment(Alignment.END, actions);
+
+        //Build DataLayout
+        HorizontalLayout dateLayout = new HorizontalLayout(start_Date, end_Date, buttonGetData, clusterNameDownloadToCSV);
+        dateLayout.setVerticalComponentAlignment(Alignment.STRETCH, start_Date, end_Date);
+        dateLayout.setVerticalComponentAlignment(Alignment.END, buttonGetData, clusterNameDownloadToCSV);
+        setHorizontalComponentAlignment(Alignment.CENTER, dateLayout);
+
+        gridInit();
+
+        serversCount.setText("Всего серверов: " + dataView.getItemCount());
+        markedCount.setText("Выделено серверов: 0");
+
+        //        Добавление компонентов в основной layout
+        add(header, dateLayout, actions, grid, serversCount, markedCount);
+
+        //      Обработчик копки получения списка серверов
+        buttonGetData.addClickListener(event -> {
+            remove(grid, serversCount, markedCount);
+            gridInit();
+            serversCount.setText("Всего серверов: " + dataView.getItemCount());
+            clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+            markedCount.setText(String.valueOf("Выделено серверов: " + selectedKafkaServers.size()));
+            add(grid, serversCount, markedCount);
+        });
+    }
+
+    void gridInit() {
         this.grid = new Grid<>(OIPKafkaData.class, false);
-//        this.dataView = grid.setItems(repo.findAll());
+        this.dataView = grid.setItems((Collection<OIPKafkaData>) grid.setItems(repo.findServerByDate(startDate, endDate)));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
@@ -128,13 +222,11 @@ public class MainView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
         grid.setColumnReorderingAllowed(true);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-//        grid.asMultiSelect().select(personList.get(0), personList.get(1)); // Как выделить все строки в таблице
 
-//        // Получение списка выделенных обьектов - строк таблицы
-
+        // Получение списка выделенных обьектов - строк таблицы
         grid.addSelectionListener(event -> {
 
-                    selectedKafkaServers = event.getAllSelectedItems();
+            selectedKafkaServers = event.getAllSelectedItems();
 //            selectedKafkaServers = null;
 //            selectedKafkaServers = new HashSet<>(grid.getSelectedItems());
             clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
@@ -151,7 +243,7 @@ public class MainView extends VerticalLayout {
                 .addColumn(OIPKafkaData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
         Grid.Column PORT_7000 = grid
                 .addColumn(new ComponentRenderer<>(
-                        OIPKafkaData-> {
+                        OIPKafkaData -> {
                             Checkbox checkbox_7000 = new Checkbox("7000");
                             checkbox_7000.setValue(false);
                             checkbox_7000.setEnabled(false);
@@ -161,7 +253,7 @@ public class MainView extends VerticalLayout {
                                 clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
                             });
 
-                            grid.addSelectionListener(event-> {
+                            grid.addSelectionListener(event -> {
                                 // Делать не активным чекбокс если строка не выбрана
                                 if (event.getAllSelectedItems().contains(OIPKafkaData)) {
                                     checkbox_7000.setEnabled(true);
@@ -173,7 +265,7 @@ public class MainView extends VerticalLayout {
 
                             });
                             //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
-                            checkboxHeader_7000.addValueChangeListener(event->{
+                            checkboxHeader_7000.addValueChangeListener(event -> {
                                 OIPKafkaData.setPORT_7000(event.getValue());
                                 checkbox_7000.setValue(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
@@ -186,7 +278,7 @@ public class MainView extends VerticalLayout {
                 .setKey("PORT_7000");
         Grid.Column PORT_7010 = grid
                 .addColumn(new ComponentRenderer<>(
-                        OIPKafkaData-> {
+                        OIPKafkaData -> {
                             Checkbox checkbox_7010 = new Checkbox("7010");
                             checkbox_7010.setValue(false);
                             checkbox_7010.setEnabled(false);
@@ -196,7 +288,7 @@ public class MainView extends VerticalLayout {
                                 clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
                             });
 
-                            grid.addSelectionListener(event-> {
+                            grid.addSelectionListener(event -> {
                                 // Делать не активным чекбокс если строка не выбрана
                                 if (event.getAllSelectedItems().contains(OIPKafkaData)) {
                                     checkbox_7010.setEnabled(true);
@@ -208,7 +300,7 @@ public class MainView extends VerticalLayout {
 
                             });
                             //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
-                            checkboxHeader_7010.addValueChangeListener(event->{
+                            checkboxHeader_7010.addValueChangeListener(event -> {
                                 OIPKafkaData.setPORT_7010(event.getValue());
                                 checkbox_7010.setValue(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
@@ -288,100 +380,6 @@ public class MainView extends VerticalLayout {
         headerRow.getCell(CREATED_BY_DATE)
                 .setComponent(createFilterHeader("Название АС", personFilter::setCreatedByDate));
 
-//        Export to CSV list of kafka servers
-        var streamResource = new StreamResource("kafkaServers.csv",
-                () -> {
-                    Stream<OIPKafkaData> OIPKafkaDataList = personFilter.dataViewFiltered.getItems();
-                    StringWriter output = new StringWriter();
-                    StatefulBeanToCsv<OIPKafkaData> beanToCSV = null;
-                    try {
-                        beanToCSV = new StatefulBeanToCsvBuilder<OIPKafkaData>(output)
-                                .withIgnoreField(OIPKafkaData.class, OIPKafkaData.class.getDeclaredField("KAFKA_NAME"))
-                                .build();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        beanToCSV.write(OIPKafkaDataList);
-                        var contents = output.toString();
-                        return new ByteArrayInputStream(contents.getBytes());
-                    } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                }
-        );
-
-        //Anchor block
-        Anchor downloadToCSV = new Anchor(streamResource, "Сохранить в CSV" );
-        Button buttonDownloadCSV = new Button(new Icon(VaadinIcon.DOWNLOAD));
-        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
-        downloadToCSV.removeAll();
-        downloadToCSV.add(buttonDownloadCSV);
-
-//        //Link to Analitics
-//        Anchor analiticsChart = new Anchor("analitics", "Аналитика");
-//        analiticsChart.setTarget("_blank");
-
-
-
-        //Создание панели инструментов
-        MenuBar menuBar = new MenuBar();
-//        ComponentEventListener<ClickEvent<MenuItem>> listenerForRefresh = e -> thread.needRefresh = true;
-
-
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY, MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_ICON);
-
-        MenuItem style = menuBar.addItem("Вид");
-        SubMenu styleSubMenu = style.getSubMenu();
-        MenuItem normal = styleSubMenu.addItem("Нормальный");
-        normal.setCheckable(true);
-        normal.setChecked(true);
-        MenuItem compact = styleSubMenu.addItem("Компактный");
-        compact.setCheckable(true);
-        compact.setChecked(false);
-
-        ComponentEventListener<ClickEvent<MenuItem>> NormalStylelistener = e -> {
-            if (e.getSource().isChecked()) {
-                grid.removeThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
-                grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
-                compact.setChecked(false);
-            }
-        };
-
-        ComponentEventListener<ClickEvent<MenuItem>> CompactStylelistener = e -> {
-            if (e.getSource().isChecked()) {
-                grid.removeThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
-                grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
-                normal.setChecked(false);
-            }
-        };
-
-        normal.addClickListener(NormalStylelistener);
-        compact.addClickListener(CompactStylelistener);
-
-//        menuBar.addItem(new Icon(VaadinIcon.REFRESH), listenerForRefresh);
-        menuBar.addItem(downloadToCSV);
-        menuBar.addItem("Столбцы");
-
-        ////Так можно делать меню видимости столбцов без изсползования ColumnToggleContextMenu. Силль отображения одинаковый. ПРоще делать с ColumnToggleContextMenu.
-//        SubMenu styleSubMenu = column.getSubMenu();
-//        MenuItem incNumber = styleSubMenu.addItem("Номер инцидента");
-//        incNumber.setCheckable(true);
-//        incNumber.setChecked(true);
-//        incNumber.addClickListener(incNumberlistener);
-
-        ////Так можно делать обработку меню видимости столбцов без изсползования ColumnToggleContextMenu. Силль отображения одинаковый. ПРоще делать с ColumnToggleContextMenu.
-//        ComponentEventListener<ClickEvent<MenuItem>> incNumberlistener = e -> {
-//            if (e.getSource().isChecked()) {
-//                HOST_NAME.setVisible(true);
-//            } else {
-//                HOST_NAME.setVisible(false);
-//            }
-//        };
-
-
-
         //Column Visibility
 //        Так можно прикрутить кнопку к меню выбора видимости столбцов. В данном приложении используется MenuBar
 //        Button menuButton = new Button(new Icon(VaadinIcon.LIST_SELECT));
@@ -400,91 +398,8 @@ public class MainView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("КЭ АС", AS_KE);
         columnToggleContextMenu.addColumnToggleItem("Название АС", AS_NAME);
         columnToggleContextMenu.addColumnToggleItem("Дата выдачи", CREATED_BY_DATE);
-
-
-        //Кнопка обновления
-//        Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
-//        refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-//        refreshButton.addClickListener(e -> {
-//            // Обновление таблицы
-//            counter.set(0);
-//            }
-//        );
-
-
-        //Кнопка получения имен кластеров
-        clusterNameDownloadToCSV = new Anchor(CreateKafkaClusterName.getKafkaClusterName(), "Получить имена кластеров для Zabbix" );
-        clusterNameDownloadToCSV.setTarget("_blank");
-        Button buttonGetKafkaClustersName = new Button();
-//        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
-        clusterNameDownloadToCSV.removeAll();
-        clusterNameDownloadToCSV.add(buttonGetKafkaClustersName);
-        buttonGetKafkaClustersName.setText("Получить имена кластеров для Zabbix");
-        buttonGetKafkaClustersName.setEnabled(true);
-
-        // build top HorizontalLayout
-        HorizontalLayout actions = new HorizontalLayout(menuBar);
-        actions.setVerticalComponentAlignment(Alignment.END, menuBar);
-        setHorizontalComponentAlignment(Alignment.END, actions);
-
-        //Build DataLayout
-        HorizontalLayout dateLayout = new HorizontalLayout(start_Date, end_Date, buttonGetData, clusterNameDownloadToCSV);
-        dateLayout.setVerticalComponentAlignment(Alignment.STRETCH, start_Date, end_Date);
-        dateLayout.setVerticalComponentAlignment(Alignment.END,buttonGetData, clusterNameDownloadToCSV);
-        setHorizontalComponentAlignment(Alignment.CENTER, dateLayout);
-
-        serversCount.setText("Всего серверов: " + dataView.getItemCount());
-        markedCount.setText("Выделено серверов: 0");
-
-
-//        Добавление компонентов в основной layout
-          add(header, dateLayout, actions , grid, serversCount, markedCount);
-
-        //      Обработчик копки получения списка серверов
-        buttonGetData.addClickListener(event->{
-            grid.setItems(repo.findServerByDate(startDate, endDate));
-            removeAll();
-            grid.getDataProvider().refreshAll();
-            add(header, dateLayout, actions , grid, serversCount, markedCount);
-        });
-
-
-
-//        countRefresh(counter);
-
-
-//        new Thread(() -> { while (true) {
-//            // Update the data for a while
-//            while (counter.get() > 0) {
-//                // Sleep to emulate background work
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                counter.getAndDecrement();
-//
-//            }
-//        }}).start();
-
-
     }
 
-//    public static void countRefresh(AtomicInteger counter){
-//        while (true) {
-//            // Update the data for a while
-//            while (counter.get() > 0) {
-//                // Sleep to emulate background work
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                counter.getAndDecrement();
-//
-//            }
-//        }
-//    }
 
     static Component createFilterHeader(String labelText, Consumer<String> filterChangeConsumer) {
         Label label = new Label(labelText);
@@ -506,43 +421,6 @@ public class MainView extends VerticalLayout {
         layout.setJustifyContentMode(JustifyContentMode.START);
         return layout;
     }
-
-//    private void affectedItemFilterRefresh(){
-//        String selectedItem;
-//        try {
-//            FilterActiveIncident.affectedItem.clear();
-//            FilterActiveIncident.affectedItemHuman.clear();
-//            if (FilterActiveIncident.filterAffectedItemComboBox.getElement().getProperty("selectedItem")!=null) {
-//                HashMap selectedItemMap = new ObjectMapper().readValue(FilterActiveIncident.filterAffectedItemComboBox.getElement().getProperty("selectedItem"), HashMap.class);
-//                selectedItem = selectedItemMap.get("label").toString();
-//            }else {selectedItem = "";}
-//            if (dataView.getItems().count() != 0) {
-//                FilterActiveIncident.affectedItem = dataView.getItems()
-//                        .map(item -> item.getAFFECTED_ITEM())
-//                        .collect(Collectors.toSet());
-//                FilterActiveIncident.affectedItem.stream()
-//                        .forEach(item -> {
-//                            if (FilterActiveIncident.affectedItemMap.get(item)==null){
-//                                FilterActiveIncident.affectedItemHuman.add("*");
-//                            }else {
-//                                FilterActiveIncident.affectedItemHuman.add(FilterActiveIncident.affectedItemMap.get(item));
-//                            }
-//                        });
-////                FilterActiveIncident.affectedItemHuman = FilterActiveIncident.affectedItem.stream()
-////                        .map(item -> FilterActiveIncident.affectedItemMap.get(item))
-////                        .collect(Collectors.toSet());
-//                if (FilterActiveIncident.affectedItemHuman.contains("*")) FilterActiveIncident.affectedItemHuman.remove("*");
-//                FilterActiveIncident.filterAffectedItemComboBox.setItems(FilterActiveIncident.affectedItemHuman);
-//                FilterActiveIncident.filterAffectedItemComboBox.setValue(selectedItem);
-//            } else {FilterActiveIncident.filterAffectedItemComboBox.setItems("");}
-//        } catch (NullPointerException e) {FilterActiveIncident.filterAffectedItemComboBox.setItems("");} catch (JsonMappingException e) {
-//            e.printStackTrace();
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
 
     static class PersonFilter {
 
@@ -577,7 +455,8 @@ public class MainView extends VerticalLayout {
             this.hostIP = hostIP;
             this.dataViewFiltered.refreshAll();
         }
-         public void setHostDomain(String hostDomain) {
+
+        public void setHostDomain(String hostDomain) {
             this.hostDomain = hostDomain;
             this.dataViewFiltered.refreshAll();
         }
@@ -661,9 +540,9 @@ public class MainView extends VerticalLayout {
             menuItem.setChecked(column.isVisible());
         }
     }
-}
 
-    class ItemContextMenu extends GridContextMenu<OIPKafkaData> {
+
+    public static class ItemContextMenu extends GridContextMenu<OIPKafkaData> {
         public ItemContextMenu(Grid<OIPKafkaData> target) {
             super(target);
 
@@ -674,68 +553,4 @@ public class MainView extends VerticalLayout {
             }));
         }
     }
-
-//    private class RefreshThread extends Thread {
-//        private final UI ui;
-//        private final MainView view;
-//        private Span span = new Span();
-//        private Span incCount = new Span();
-//        private Span incFilteredCount = new Span();
-//        public boolean needRefresh = false;
-//
-//
-//        public RefreshThread(UI ui, MainView view) {
-//            this.ui = ui;
-//            this.view = view;
-//            view.dataView = grid.setItems(repo.findAll());
-//
-//        }
-//
-//        @Override
-//        public void run() {
-//             try {
-//                while (true) {
-//                    int counter = 300;
-//                    // Update the data for a while
-//                    while (counter > 0 && !needRefresh) {
-//                    // Sleep to emulate background work
-//                        Thread.sleep(10000);
-//                        String message = "Обновление данных через " + (counter = counter -10) + " сек";
-//
-////                        ui.access(() -> {
-////                            view.remove(incFilteredCount, incCount, span);
-////                            span.setText(message);
-////                            incCount.setText("Всего инцидентов: " + String.valueOf(view.dataView.getItemCount()));
-////                            personFilter.dataViewFiltered.removeItems(personFilter.dataViewFiltered.getItems().collect(Collectors.toList()));
-////                            personFilter.dataViewFiltered.addItems(view.dataView.getItems().collect(Collectors.toList()));
-////                            incFilteredCount.setText("Отфильтровано: " + String.valueOf(view.personFilter.dataViewFiltered.getItemCount()));
-////                            view.add(incFilteredCount, incCount, span);
-////
-////                        });
-////                    }
-//
-//                    // Inform that we are done
-////                    ui.access(() -> {
-////                        view.remove(incFilteredCount, incCount, span);
-////                        personFilter.dataViewFiltered.removeItems(personFilter.dataViewFiltered.getItems().collect(Collectors.toList()));
-//////                        view.dataView = grid.setItems(repo.findAll(assignmentGroup));
-//////                        personFilter.dataViewFiltered.addItems(repo.findAll(assignmentGroup));
-////                        view.dataView = grid.setItems(repo.findAll());
-////                        personFilter.dataViewFiltered.addItems(repo.findAll());
-//////                        affectedItemFilterRefresh();
-////                        Notification.show("Данные обновлены", 1000, Notification.Position.TOP_CENTER);
-////                        span.setText("Данные обновлены");
-////                        incFilteredCount.setText("Отфильтровано: " + String.valueOf(view.personFilter.dataViewFiltered.getItemCount()));
-////                        incCount.setText("Всего инцидентов: " + String.valueOf(view.dataView.getItemCount()));
-////                        view.add(incFilteredCount, incCount, span);
-////                        needRefresh=false;
-//////                        System.gc();
-////                    });
-//                }
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
-//}
+}
