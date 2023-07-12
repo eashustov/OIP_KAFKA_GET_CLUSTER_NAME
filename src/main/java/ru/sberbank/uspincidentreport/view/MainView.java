@@ -443,8 +443,9 @@ public class MainView extends VerticalLayout {
         //      Обработчик копки получения списка серверов
         buttonGetData.addClickListener(event->{
             grid.setItems(repo.findServerByDate(startDate, endDate));
-            grid.setEnabled(false);
-            grid.setEnabled(true);
+            removeAll();
+            grid.getDataProvider().refreshAll();
+            add(header, dateLayout, actions , grid, serversCount, markedCount);
         });
 
 
