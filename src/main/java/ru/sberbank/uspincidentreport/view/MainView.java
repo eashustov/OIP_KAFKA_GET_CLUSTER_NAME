@@ -322,10 +322,10 @@ public class MainView extends VerticalLayout {
                 .addColumn(OIPKafkaData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
         Grid.Column<OIPKafkaData> KAFKA_KE = grid
                 .addColumn(OIPKafkaData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ кластера");
-        KAFKA_KE.setVisible(false);
+        KAFKA_KE.setVisible(true);
         Grid.Column<OIPKafkaData> KAFKA_NAME = grid
                 .addColumn(OIPKafkaData::getKAFKA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
-        KAFKA_NAME.setVisible(false);
+        KAFKA_NAME.setVisible(true);
         Grid.Column<OIPKafkaData> ASSIGNMENT_GROUP = grid
                 .addColumn(OIPKafkaData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
         Grid.Column<OIPKafkaData> STEND_NAME = grid
