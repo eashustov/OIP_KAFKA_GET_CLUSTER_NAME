@@ -32,7 +32,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
@@ -44,12 +43,10 @@ import ru.sberbank.uspincidentreport.repo.OIPKafkaRepo;
 import ru.sberbank.uspincidentreport.service.CreateKafkaClusterName;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -67,7 +64,6 @@ public class MainView extends VerticalLayout {
     private OIPKafkaRepo repo;
     public static Grid<OIPKafkaData> grid;
     private GridListDataView<OIPKafkaData> dataView;
-    //    private RefreshThread thread;
     PersonFilter personFilter;
     String startDate;
     String endDate;
@@ -191,6 +187,7 @@ public class MainView extends VerticalLayout {
         dateLayout.setVerticalComponentAlignment(Alignment.END, buttonGetData, clusterNameDownloadToCSV);
         setHorizontalComponentAlignment(Alignment.CENTER, dateLayout);
 
+        //Инициализация таблицы
         gridInit();
 
         serversCount.setText("Всего серверов: " + dataView.getItemCount());
@@ -211,7 +208,7 @@ public class MainView extends VerticalLayout {
         });
     }
 
-
+//Метод инициализации таблицы
     void gridInit() {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
@@ -550,10 +547,20 @@ public class MainView extends VerticalLayout {
         public ItemContextMenu(Grid<OIPKafkaData> target) {
             super(target);
 
-            addItem("Сканировать порты", e -> e.getItem().ifPresent(incident -> {
+            addItem("Сканировать порты в Alpha/Omega", e -> e.getItem().ifPresent(incident -> {
                 getUI().get().getPage().open(
                         "https://nlb-jenkins/cis/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
-                        "Сканировать порты");
+                        "Сканировать порты в Alpha/Omega");
+            }));
+            addItem("Сканировать порты в Sigma", e -> e.getItem().ifPresent(incident -> {
+                getUI().get().getPage().open(
+                        "https://nlb-jenkins-sigma/infra/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
+                        "Сканировать порты в Sigma");
+            }));
+            addItem("Сканировать порты в PCIDSS", e -> e.getItem().ifPresent(incident -> {
+                getUI().get().getPage().open(
+                        "https://nlb-jenkins-pcidss/infra/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
+                        "Сканировать порты в PCIDSS");
             }));
         }
     }
