@@ -100,7 +100,7 @@ public class MainView extends VerticalLayout {
 
 
         this.repo = repo;
-        this.header = new H4("Серера Corax выданные из ДИ за период");
+        this.header = new H4("Серверы Corax выданные из ДИ за период");
 
         //        Export to CSV list of kafka servers
         var streamResource = new StreamResource("kafkaServers.csv",
