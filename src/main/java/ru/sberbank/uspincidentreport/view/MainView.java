@@ -64,7 +64,7 @@ public class MainView extends VerticalLayout {
     private OIPKafkaRepo repo;
     public static Grid<OIPKafkaData> grid;
     private GridListDataView<OIPKafkaData> dataView;
-    PersonFilter personFilter;
+    ServerFilter serverFilter;
     String startDate;
     String endDate;
     DatePicker start_Date;
@@ -73,6 +73,7 @@ public class MainView extends VerticalLayout {
     public static Set<OIPKafkaData> selectedKafkaServers = new HashSet<>();
     private Span serversCount = new Span();
     private Span markedCount = new Span();
+    private Span filteredCount = new Span();
     Checkbox checkboxHeader_7000;
     Checkbox checkboxHeader_7010;
     //Создание панели инструментов
@@ -105,7 +106,7 @@ public class MainView extends VerticalLayout {
         //        Export to CSV list of kafka servers
         var streamResource = new StreamResource("kafkaServers.csv",
                 () -> {
-                    Stream<OIPKafkaData> OIPKafkaDataList = personFilter.dataViewFiltered.getItems();
+                    Stream<OIPKafkaData> OIPKafkaDataList = serverFilter.dataViewFiltered.getItems();
                     StringWriter output = new StringWriter();
                     StatefulBeanToCsv<OIPKafkaData> beanToCSV = null;
                     try {
@@ -192,19 +193,19 @@ public class MainView extends VerticalLayout {
 
         serversCount.setText("Всего серверов: " + dataView.getItemCount());
         markedCount.setText("Выделено серверов: 0");
-
+        filteredCount.setText("Отфильтровано: " + serverFilter.dataViewFiltered.getItemCount());
         //        Добавление компонентов в основной layout
-        add(header, dateLayout, actions, grid, serversCount, markedCount);
+        add(header, dateLayout, actions, grid, serversCount, markedCount, filteredCount);
 
 
         //      Обработчик копки получения списка серверов
         buttonGetData.addClickListener(event -> {
-            remove(grid, serversCount, markedCount);
+            remove(grid, serversCount, markedCount, filteredCount);
             gridInit();
             serversCount.setText("Всего серверов: " + dataView.getItemCount());
             clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
             markedCount.setText("Выделено серверов: 0");
-            add(grid, serversCount, markedCount);
+            add(grid, serversCount, markedCount, filteredCount);
         });
     }
 
@@ -232,8 +233,8 @@ public class MainView extends VerticalLayout {
 //            selectedKafkaServers = new HashSet<>(grid.getSelectedItems());
             clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
             markedCount.setText(String.valueOf("Выделено серверов: " + selectedKafkaServers.size()));
-            remove(markedCount);
-            add(markedCount);
+            remove(markedCount, filteredCount);
+            add(markedCount, filteredCount);
         });
 
 
@@ -275,7 +276,7 @@ public class MainView extends VerticalLayout {
                             return checkbox_7000;
                         }
 
-                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт kafka (7000)")
+                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт Zookeeper (7000)")
                 .setKey("PORT_7000");
         Grid.Column PORT_7010 = grid
                 .addColumn(new ComponentRenderer<>(
@@ -309,7 +310,7 @@ public class MainView extends VerticalLayout {
                             });
                             return checkbox_7010;
                         }
-                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт zookeeper (7010)")
+                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт Kafka (7010)")
                 .setKey("PORT_7010");
         Grid.Column<OIPKafkaData> HOST_DOMAIN = grid
                 .addColumn(OIPKafkaData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
@@ -341,7 +342,7 @@ public class MainView extends VerticalLayout {
         AS_KE.setVisible(false);
 
         GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
-        personFilter = new PersonFilter(dataView);
+        serverFilter = new ServerFilter(dataView);
 
         //Create headers for Grid
 
@@ -349,9 +350,9 @@ public class MainView extends VerticalLayout {
         HeaderRow headerRow = grid.appendHeaderRow();
 
         headerRow.getCell(HOST_NAME)
-                .setComponent(createFilterHeader("Имя сервера", personFilter::setHostName));
+                .setComponent(createFilterHeader("Имя сервера", serverFilter::setHostName));
         headerRow.getCell(HOST_IP)
-                .setComponent(createFilterHeader("ip адрес", personFilter::setHostIP));
+                .setComponent(createFilterHeader("ip адрес", serverFilter::setHostIP));
 
         checkboxHeader_7000 = new Checkbox("7000");
         checkboxHeader_7000.setValue(false);
@@ -363,23 +364,23 @@ public class MainView extends VerticalLayout {
         headerRow.getCell(PORT_7010).setComponent(checkboxHeader_7010);
 
         headerRow.getCell(HOST_DOMAIN)
-                .setComponent(createFilterHeader("Домен", personFilter::setHostDomain));
+                .setComponent(createFilterHeader("Домен", serverFilter::setHostDomain));
         headerRow.getCell(HOST_KE)
-                .setComponent(createFilterHeader("КЭ сервера", personFilter::setHostKE));
+                .setComponent(createFilterHeader("КЭ сервера", serverFilter::setHostKE));
         headerRow.getCell(OS_ADMIN)
-                .setComponent(createFilterHeader("Группа сопровождения ОС", personFilter::setOSAdmin));
+                .setComponent(createFilterHeader("Группа сопровождения ОС", serverFilter::setOSAdmin));
         headerRow.getCell(KAFKA_KE)
-                .setComponent(createFilterHeader("КЭ кластера", personFilter::setKafkaKE));
+                .setComponent(createFilterHeader("КЭ кластера", serverFilter::setKafkaKE));
         headerRow.getCell(KAFKA_NAME)
-                .setComponent(createFilterHeader("Название кластера", personFilter::setKafkaName));
+                .setComponent(createFilterHeader("Название кластера", serverFilter::setKafkaName));
         headerRow.getCell(ASSIGNMENT_GROUP)
-                .setComponent(createFilterHeader("Группа сопровождения", personFilter::setAssignmentGroup));
+                .setComponent(createFilterHeader("Группа сопровождения", serverFilter::setAssignmentGroup));
         headerRow.getCell(AS_KE)
-                .setComponent(createFilterHeader("КЭ АС", personFilter::setAS_KE));
+                .setComponent(createFilterHeader("КЭ АС", serverFilter::setAS_KE));
         headerRow.getCell(AS_NAME)
-                .setComponent(createFilterHeader("Название АС", personFilter::setASName));
+                .setComponent(createFilterHeader("Название АС", serverFilter::setASName));
         headerRow.getCell(CREATED_BY_DATE)
-                .setComponent(createFilterHeader("Название АС", personFilter::setCreatedByDate));
+                .setComponent(createFilterHeader("Название АС", serverFilter::setCreatedByDate));
 
         //Column Visibility
 //        Так можно прикрутить кнопку к меню выбора видимости столбцов. В данном приложении используется MenuBar
@@ -388,8 +389,8 @@ public class MainView extends VerticalLayout {
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuBar.getItems().get(2));
         columnToggleContextMenu.addColumnToggleItem("Имя сервера", HOST_NAME);
         columnToggleContextMenu.addColumnToggleItem("ip адрес", HOST_IP);
-        columnToggleContextMenu.addColumnToggleItem("Порт kafka (7000)", PORT_7000);
-        columnToggleContextMenu.addColumnToggleItem("Порт zookeeper (7010)", PORT_7010);
+        columnToggleContextMenu.addColumnToggleItem("Порт Zookeeper (7000)", PORT_7000);
+        columnToggleContextMenu.addColumnToggleItem("Порт Kafka (7010)", PORT_7010);
         columnToggleContextMenu.addColumnToggleItem("Домен", HOST_DOMAIN);
         columnToggleContextMenu.addColumnToggleItem("КЭ сервера", HOST_KE);
         columnToggleContextMenu.addColumnToggleItem("Группа сопровождения ОС", OS_ADMIN);
@@ -399,6 +400,13 @@ public class MainView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("КЭ АС", AS_KE);
         columnToggleContextMenu.addColumnToggleItem("Название АС", AS_NAME);
         columnToggleContextMenu.addColumnToggleItem("Дата выдачи", CREATED_BY_DATE);
+
+        // Обновление данных счетчика по отфильтрованным элементам
+        serverFilter.dataViewFiltered.addItemCountChangeListener(event->{
+            remove(filteredCount);
+            filteredCount.setText("Отфильтровано: " + serverFilter.dataViewFiltered.getItemCount());
+            add(filteredCount);
+        });
     }
 
 
@@ -423,7 +431,7 @@ public class MainView extends VerticalLayout {
         return layout;
     }
 
-    static class PersonFilter {
+    static class ServerFilter {
 
 
         private GridListDataView<OIPKafkaData> dataViewFiltered;
@@ -441,7 +449,7 @@ public class MainView extends VerticalLayout {
         private String ASName;
         private String CreatedByDate;
 
-        public PersonFilter(GridListDataView<OIPKafkaData> dataView) {
+        public ServerFilter(GridListDataView<OIPKafkaData> dataView) {
             this.dataViewFiltered = dataView;
             this.dataViewFiltered.addFilter(this::test);
 
