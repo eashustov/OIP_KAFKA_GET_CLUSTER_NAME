@@ -1,13 +1,17 @@
 {
   "frontendFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/frontend",
   "themeFolder": "themes",
-  "themeResourceFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/frontend",
+  "themeResourceFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/frontend/generated/jar-resources",
   "staticOutput": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
   "generatedFolder": "generated",
+  "statsOutput": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/classes/META-INF/VAADIN/config",
   "frontendBundleOutput": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/classes/META-INF/VAADIN/webapp",
-  "addonFrontendFolder": "target/flow-frontend/",
+  "devBundleOutput": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/dev-bundle/webapp",
+  "devBundleStatsOutput": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/dev-bundle/config",
+  "jarResourcesFolder": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/frontend/generated/jar-resources",
   "themeName": "",
   "clientServiceWorkerSource": "/home/eshustov/IdeaProjects/OIP_KAFKA_GET_CLUSTER_NAME/target/sw.ts",
   "pwaEnabled": false,
+  "offlineEnabled": false,
   "offlinePath": "'offline.html'"
 }
