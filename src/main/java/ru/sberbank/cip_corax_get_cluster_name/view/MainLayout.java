@@ -25,9 +25,9 @@ public class MainLayout extends AppLayout {
     private void createHeader() {
         H2 space = new H2(" ");
         H2 logo = new H2("Управление инфраструктурой серверов приложений");
-        logo.addClassNames(
-                LumoUtility.FontSize.LARGE,
-                LumoUtility.Margin.MEDIUM);
+//        logo.addClassNames(
+//                LumoUtility.FontSize.LARGE,
+//                LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Выход " + u, e -> securityService.logout());
@@ -38,9 +38,9 @@ public class MainLayout extends AppLayout {
         header.expand(space);
         header.expand(logo);
         header.setWidthFull();
-        header.addClassNames(
-                LumoUtility.Padding.Vertical.NONE,
-                LumoUtility.Padding.Horizontal.MEDIUM);
+//        header.addClassNames(
+//                LumoUtility.Padding.Vertical.NONE,
+//                LumoUtility.Padding.Horizontal.MEDIUM);
 
         addToNavbar(header);
 

@@ -1,1 +1,0 @@
-import{bI as e,bH as o}from"./indexhtml-5JtH9nlG.js";const r={tagName:"vaadin-icon",displayName:"Icon",elements:[{selector:"vaadin-icon",displayName:"Icon",properties:[e.iconColor,e.iconSize,o.backgroundColor,o.borderColor,o.borderWidth,o.borderRadius]}]};export{r as default};

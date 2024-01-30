@@ -15,7 +15,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.sberbank</groupId>
-    <artifactId>OIP_KAFKA_GET_CLUSTER_NAME</artifactId>
+    <artifactId>CIP_KAFKA_GET_CLUSTER_NAME</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>CIP_KAFKA_GET_CLUSTER_NAME</name>
     <description>CIP_KAFKA_GET_CLUSTER_NAME</description>
@@ -31,6 +31,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
+            <version>${vaadin.version}</version>
         </dependency>
         <!-- tag::security[] -->
         <dependency>
@@ -95,6 +96,21 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-lumo-theme</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.2.1</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
