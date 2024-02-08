@@ -19,7 +19,6 @@ import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Anchor;
-//import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
@@ -716,7 +715,7 @@ public class MainView extends VerticalLayout {
         headerRow.getCell(AS_NAME)
                 .setComponent(createFilterHeader("Название АС", serverFilter::setASName));
         headerRow.getCell(CREATED_BY_DATE)
-                .setComponent(createFilterHeader("Название АС", serverFilter::setCreatedByDate));
+                .setComponent(createFilterHeader("Дата выдачи", serverFilter::setCreatedByDate));
 
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuBar.getItems().get(2));
         columnToggleContextMenu.addColumnToggleItem("Имя сервера", HOST_NAME);

@@ -49,8 +49,10 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
                 new RouterLink("Серверы Corax выданные из ДИ за период", MainView.class)
-//                ,
-//                new RouterLink("Аналитика инцидентов ДСП зарегистрированных вручную", Analitics.class)
+                ,
+                new RouterLink("Серверы SIDEC выданные из ДИ за период", SidecView.class)
+                ,
+                new RouterLink("Серверы Skeeper выданные из ДИ за период", SkeeperView.class)
 //                new Anchor("https://google.com", "Аналитика", AnchorTarget.BLANK)
         ));
     }
