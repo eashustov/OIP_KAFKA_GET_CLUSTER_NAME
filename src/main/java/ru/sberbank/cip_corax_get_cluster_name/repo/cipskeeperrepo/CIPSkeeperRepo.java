@@ -9,6 +9,4 @@ import java.util.List;
 
 @Repository
 public interface CIPSkeeperRepo extends CrudRepository<CIPSkeeperData, String> {
-//    @Query(value = "select * from skeeper_as_name p LIMIT 500", nativeQuery = true)
-//    List<CIPSkeeperData> findAll();
 }

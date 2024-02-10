@@ -9,6 +9,4 @@ import java.util.List;
 
 @Repository
 public interface CIPSIDECRepo extends CrudRepository<CIPSIDECData, String> {
-//    @Query(value = "select * from sidec_as_name p LIMIT 500", nativeQuery = true)
-//    List<CIPSIDECData> findAll();
 }

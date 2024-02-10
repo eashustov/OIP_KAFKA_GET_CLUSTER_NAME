@@ -7,5 +7,4 @@ import java.util.List;
 
 @Repository
 public interface OIPKafkaRepo extends CrudRepository<OIPKafkaData, String> {
-
 }
