@@ -38,7 +38,7 @@ import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.sberbank.cip_corax_get_cluster_name.domain.OIPKafkaData;
-import ru.sberbank.cip_corax_get_cluster_name.repo.OIPKafkaRepo;
+import ru.sberbank.cip_corax_get_cluster_name.repo.cipcoraxrepo.OIPKafkaRepo;
 import ru.sberbank.cip_corax_get_cluster_name.service.CreateKafkaClusterName;
 
 import java.io.ByteArrayInputStream;
@@ -47,6 +47,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -60,7 +61,7 @@ import java.util.stream.Stream;
 public class MainView extends VerticalLayout {
     Anchor clusterNameDownloadToCSV;
     private H4 header;
-    @Autowired
+//    @Autowired
     private OIPKafkaRepo repo;
     private Grid<OIPKafkaData> grid;
     private GridListDataView<OIPKafkaData> dataView;
@@ -96,6 +97,7 @@ public class MainView extends VerticalLayout {
 //    }
 
 
+    @Autowired
     public MainView(OIPKafkaRepo repo) throws IOException {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
@@ -549,7 +551,7 @@ public class MainView extends VerticalLayout {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
         this.grid = new Grid<>(OIPKafkaData.class, false);
-        this.dataView = grid.setItems(repo.findAll());
+        this.dataView = grid.setItems((Collection<OIPKafkaData>) repo.findAll());
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
@@ -677,7 +679,7 @@ public class MainView extends VerticalLayout {
 
 
 //        GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findAll());
-        serverFilter = new ServerFilter(grid.setItems(repo.findAll()));
+        serverFilter = new ServerFilter(grid.setItems((Collection<OIPKafkaData>) repo.findAll()));
 
         //Create headers for Grid
 

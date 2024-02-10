@@ -40,7 +40,7 @@ import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.sberbank.cip_corax_get_cluster_name.domain.CIPSIDECData;
-import ru.sberbank.cip_corax_get_cluster_name.repo.CIPSIDECRepo;
+import ru.sberbank.cip_corax_get_cluster_name.repo.cipsidecrepo.CIPSIDECRepo;
 import ru.sberbank.cip_corax_get_cluster_name.service.CreateSidecClusterName;
 
 import java.io.ByteArrayInputStream;
@@ -49,6 +49,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -215,7 +216,7 @@ import java.util.stream.Stream;
             startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
             endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
             this.grid = new Grid<>(CIPSIDECData.class, false);
-            this.dataView = grid.setItems(repo.findAll());
+            this.dataView = grid.setItems((Collection<CIPSIDECData>) repo.findAll());
             setHorizontalComponentAlignment(Alignment.CENTER, header);
             setJustifyContentMode(JustifyContentMode.START);
 
@@ -343,7 +344,7 @@ import java.util.stream.Stream;
 
 
 //        GridListDataView<CIPSIDECData> dataView = grid.setItems(repo.findAll());
-            serverSidecFilter = new ServerSidecFilter(grid.setItems(repo.findAll()));
+            serverSidecFilter = new ServerSidecFilter(grid.setItems((Collection<CIPSIDECData>) repo.findAll()));
 
             //Create headers for Grid
 

@@ -40,7 +40,7 @@ import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.sberbank.cip_corax_get_cluster_name.domain.CIPSkeeperData;
-import ru.sberbank.cip_corax_get_cluster_name.repo.CIPSkeeperRepo;
+import ru.sberbank.cip_corax_get_cluster_name.repo.cipskeeperrepo.CIPSkeeperRepo;
 import ru.sberbank.cip_corax_get_cluster_name.service.CreateSkeeperClusterName;
 
 import java.io.ByteArrayInputStream;
@@ -49,6 +49,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -213,7 +214,7 @@ public class SkeeperView extends VerticalLayout {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
         this.grid = new Grid<>(CIPSkeeperData.class, false);
-        this.dataView = grid.setItems(repo.findAll());
+        this.dataView = grid.setItems((Collection<CIPSkeeperData>) repo.findAll());
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
@@ -306,7 +307,7 @@ public class SkeeperView extends VerticalLayout {
 
 
 //        GridListDataView<CIPSkeeperData> dataView = grid.setItems(repo.findAll());
-        serverSkeeperFilter = new ServerSkeeperFilter(grid.setItems(repo.findAll()));
+        serverSkeeperFilter = new ServerSkeeperFilter(grid.setItems((Collection<CIPSkeeperData>) repo.findAll()));
 
         //Create headers for Grid
 
