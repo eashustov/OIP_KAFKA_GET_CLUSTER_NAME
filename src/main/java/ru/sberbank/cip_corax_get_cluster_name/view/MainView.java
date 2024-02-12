@@ -675,7 +675,6 @@ public class MainView extends VerticalLayout {
         J_PROVIDING_UNIT_NAME.setVisible(false);
 
 
-//        GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findAll());
         serverFilter = new ServerFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
 
         //Create headers for Grid

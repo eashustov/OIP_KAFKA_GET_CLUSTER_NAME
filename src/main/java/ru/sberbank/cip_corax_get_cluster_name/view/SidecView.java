@@ -342,7 +342,6 @@ import java.util.stream.Stream;
             J_PROVIDING_UNIT_NAME.setVisible(false);
 
 
-//        GridListDataView<CIPSIDECData> dataView = grid.setItems(repo.findAll());
             serverSidecFilter = new ServerSidecFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
 
             //Create headers for Grid

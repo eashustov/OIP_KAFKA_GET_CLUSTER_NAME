@@ -305,7 +305,6 @@ public class SkeeperView extends VerticalLayout {
         J_PROVIDING_UNIT_NAME.setVisible(false);
 
 
-//        GridListDataView<CIPSkeeperData> dataView = grid.setItems(repo.findAll());
         serverSkeeperFilter = new ServerSkeeperFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
 
         //Create headers for Grid
