@@ -8,11 +8,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="OIP_KAFKA_GET_CLUSTER_NAME" />
+        <module name="CIP_KAFKA_GET_CLUSTER_NAME" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="17" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="CIP_KAFKA_GET_CLUSTER_NAME" options="-parameters" />
       <module name="OIP_KAFKA_GET_CLUSTER_NAME" options="-parameters" />
     </option>
   </component>
