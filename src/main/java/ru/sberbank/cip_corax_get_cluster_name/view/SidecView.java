@@ -49,7 +49,6 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -63,7 +62,6 @@ import java.util.stream.Stream;
     public class SidecView extends VerticalLayout {
         Anchor clusterNameDownloadToCSV;
         private H4 header;
-        @Autowired
         private CIPSIDECRepo repo;
         private Grid<CIPSIDECData> grid;
         private GridListDataView<CIPSIDECData> dataView;
@@ -83,7 +81,8 @@ import java.util.stream.Stream;
         //Создание панели инструментов
         MenuBar menuBar = new MenuBar();
 
-        public SidecView(CIPSIDECRepo repo) throws IOException {
+        @Autowired
+        public SidecView(CIPSIDECRepo repo) {
 
             LocalDate now = LocalDate.now(ZoneId.systemDefault());
             start_Date = new DatePicker("Начало");
@@ -216,7 +215,7 @@ import java.util.stream.Stream;
             startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
             endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
             this.grid = new Grid<>(CIPSIDECData.class, false);
-            this.dataView = grid.setItems((Collection<CIPSIDECData>) repo.findAll());
+            this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
             setHorizontalComponentAlignment(Alignment.CENTER, header);
             setJustifyContentMode(JustifyContentMode.START);
 
@@ -344,7 +343,7 @@ import java.util.stream.Stream;
 
 
 //        GridListDataView<CIPSIDECData> dataView = grid.setItems(repo.findAll());
-            serverSidecFilter = new ServerSidecFilter(grid.setItems((Collection<CIPSIDECData>) repo.findAll()));
+            serverSidecFilter = new ServerSidecFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
 
             //Create headers for Grid
 

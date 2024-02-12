@@ -49,7 +49,7 @@ public class CIPSkeeperData {
     private Boolean PORT_7000 = true;
 
     public CIPSkeeperData(String HOST_NAME, String HOST_IP, String HOST_DOMAIN, String SKEEPER_KE, String SKEEPER_NAME,
-                          String AS_NAME, String AS_KE, String CREATED_BY_DATE, String HOST_KE, String OS_ADMIN,
+                          String AS_NAME, String AS_KE, String date, String HOST_KE, String OS_ADMIN,
                           String ASSIGNMENT_GROUP, String STEND_NAME, String j_PROVIDING_UNIT_NAME, Boolean PORT_7000) {
         this.HOST_NAME = HOST_NAME;
         this.HOST_IP = HOST_IP;
@@ -58,12 +58,12 @@ public class CIPSkeeperData {
         this.SKEEPER_NAME = SKEEPER_NAME;
         this.AS_NAME = AS_NAME;
         this.AS_KE = AS_KE;
-        this.CREATED_BY_DATE = CREATED_BY_DATE;
+        this.CREATED_BY_DATE = date;
         this.HOST_KE = HOST_KE;
         this.OS_ADMIN = OS_ADMIN;
         this.ASSIGNMENT_GROUP = ASSIGNMENT_GROUP;
         this.STEND_NAME = STEND_NAME;
-        J_PROVIDING_UNIT_NAME = j_PROVIDING_UNIT_NAME;
+        this.J_PROVIDING_UNIT_NAME = j_PROVIDING_UNIT_NAME;
         this.PORT_7000 = PORT_7000;
     }
 

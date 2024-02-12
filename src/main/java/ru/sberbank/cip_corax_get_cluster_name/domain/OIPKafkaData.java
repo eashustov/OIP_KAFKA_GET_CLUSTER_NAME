@@ -18,8 +18,6 @@ public class OIPKafkaData {
     private String HOST_IP;
     @Column(name = "HOST_DOMAIN")
     private String HOST_DOMAIN;
-//    @Column(name = "KAFKA_VERSION")
-//    private String KAFKA_VERSION;
     @Column(name = "HOST_KE")
     private String HOST_KE;
     @Column(name = "OS_ADMIN")
@@ -81,10 +79,6 @@ public class OIPKafkaData {
     public String getHOST_DOMAIN() {
         return HOST_DOMAIN;
     }
-
-//    public String getKAFKA_VERSION() {
-//        return KAFKA_VERSION;
-//    }
 
     public String getHOST_KE() {
         return HOST_KE;

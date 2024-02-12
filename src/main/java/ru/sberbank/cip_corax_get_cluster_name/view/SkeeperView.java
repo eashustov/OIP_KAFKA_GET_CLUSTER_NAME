@@ -49,7 +49,6 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -63,7 +62,6 @@ import java.util.stream.Stream;
 public class SkeeperView extends VerticalLayout {
     Anchor clusterNameDownloadToCSV;
     private H4 header;
-    @Autowired
     private CIPSkeeperRepo repo;
     private Grid<CIPSkeeperData> grid;
     private GridListDataView<CIPSkeeperData> dataView;
@@ -82,7 +80,8 @@ public class SkeeperView extends VerticalLayout {
     //Создание панели инструментов
     MenuBar menuBar = new MenuBar();
 
-    public SkeeperView(CIPSkeeperRepo repo) throws IOException {
+    @Autowired
+    public SkeeperView(CIPSkeeperRepo repo) {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         start_Date = new DatePicker("Начало");
@@ -214,7 +213,7 @@ public class SkeeperView extends VerticalLayout {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
         this.grid = new Grid<>(CIPSkeeperData.class, false);
-        this.dataView = grid.setItems((Collection<CIPSkeeperData>) repo.findAll());
+        this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
@@ -307,7 +306,7 @@ public class SkeeperView extends VerticalLayout {
 
 
 //        GridListDataView<CIPSkeeperData> dataView = grid.setItems(repo.findAll());
-        serverSkeeperFilter = new ServerSkeeperFilter(grid.setItems((Collection<CIPSkeeperData>) repo.findAll()));
+        serverSkeeperFilter = new ServerSkeeperFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
 
         //Create headers for Grid
 

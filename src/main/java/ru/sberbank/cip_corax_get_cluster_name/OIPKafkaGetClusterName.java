@@ -3,7 +3,9 @@ package ru.sberbank.cip_corax_get_cluster_name;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 //import ru.sberbank.uspincidentreport.service.zabbix.ZabbixAPI_2;
 
 @SpringBootApplication
@@ -206,7 +208,7 @@ public class OIPKafkaGetClusterName {
 //        CI02021291MQMapFile = mapFile;
 //    }
 
-    public static void main(String[] args) {
+   public static void main(String[] args) {
         context = SpringApplication.run(OIPKafkaGetClusterName.class, args);
 
 //        //Получение статистики Zabbix

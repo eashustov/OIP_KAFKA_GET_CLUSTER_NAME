@@ -34,7 +34,6 @@ public class CIPSIDECData {
     @Column(name = "CREATED_BY_DATE")
     @DateTimeFormat(pattern="dd.MM.yy")
     private String CREATED_BY_DATE;
-
     @Column(name = "HOST_KE")
     private String HOST_KE;
     @Column(name = "OS_ADMIN")
@@ -63,7 +62,7 @@ public class CIPSIDECData {
         this.OS_ADMIN = OS_ADMIN;
         this.ASSIGNMENT_GROUP = ASSIGNMENT_GROUP;
         this.STEND_NAME = STEND_NAME;
-        J_PROVIDING_UNIT_NAME = j_PROVIDING_UNIT_NAME;
+        this.J_PROVIDING_UNIT_NAME = j_PROVIDING_UNIT_NAME;
         this.PORT_8081 = PORT_8081;
         this.PORT_7030 = PORT_7030;
     }

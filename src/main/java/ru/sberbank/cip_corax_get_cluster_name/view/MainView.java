@@ -47,7 +47,6 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -61,7 +60,6 @@ import java.util.stream.Stream;
 public class MainView extends VerticalLayout {
     Anchor clusterNameDownloadToCSV;
     private H4 header;
-//    @Autowired
     private OIPKafkaRepo repo;
     private Grid<OIPKafkaData> grid;
     private GridListDataView<OIPKafkaData> dataView;
@@ -96,9 +94,8 @@ public class MainView extends VerticalLayout {
 //        thread = null;
 //    }
 
-
     @Autowired
-    public MainView(OIPKafkaRepo repo) throws IOException {
+    public MainView(OIPKafkaRepo repo) {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         start_Date = new DatePicker("Начало");
@@ -551,7 +548,7 @@ public class MainView extends VerticalLayout {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
         this.grid = new Grid<>(OIPKafkaData.class, false);
-        this.dataView = grid.setItems((Collection<OIPKafkaData>) repo.findAll());
+        this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
@@ -679,7 +676,7 @@ public class MainView extends VerticalLayout {
 
 
 //        GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findAll());
-        serverFilter = new ServerFilter(grid.setItems((Collection<OIPKafkaData>) repo.findAll()));
+        serverFilter = new ServerFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
 
         //Create headers for Grid
 

@@ -2858,3 +2858,801 @@ WHERE
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-02-12 13:43:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "select * from kafkaservers p LIMIT 500\000a\000a[*]where\000acreated_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')\000a\000aorder by created_by_date"
+Syntax error in SQL statement "select * from kafkaservers p LIMIT 500\000a\000a[*]where\000acreated_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')\000a\000aorder by created_by_date"; SQL statement:
+select * from kafkaservers p LIMIT 500
+
+where
+created_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+order by created_by_date [42000-220]
+2024-02-12 13:48:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "select * from kafkaservers p LIMIT 500\000a\000a[*]where\000acreated_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')\000a\000aorder by created_by_date"
+Syntax error in SQL statement "select * from kafkaservers p LIMIT 500\000a\000a[*]where\000acreated_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')\000a\000aorder by created_by_date"; SQL statement:
+select * from kafkaservers p LIMIT 500
+
+where
+created_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+order by created_by_date [42000-220]
+2024-02-12 14:11:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "SM_KE_HOST_KAFKA_PROM" не найдена
+Table "SM_KE_HOST_KAFKA_PROM" not found; SQL statement:
+select
+    sm.host_name host_name,
+    sm.HOST_IP host_ip,
+    sm.tps_dns_name host_domain,
+    sm.server_ke host_KE,
+    sm.OS_ADMIN,
+    sm.kafka_ke KAFKA_KE,
+    sm.title KAFKA_NAME,
+    sm.assignment assignment_group,
+    d1.title stend_name,
+    d2.title AS_name,
+    sm.created_by_date created_by_date,
+    d3.J_PROVIDING_UNIT_NAME,
+    d2.logical_name AS_KE,
+    'false' PORT_7000,
+    'false' PORT_7010
+
+
+from sm_ke_host_kafka_prom sm
+         left join smprimary.cirelationsm1@smrep_pub r
+                   on sm.kafka_ke = r.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d1
+                   on r.logical_name = d1.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r1
+                   on d1.logical_name = r1.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d2
+                   on r1.logical_name = d2.logical_name
+         left join smprimary.SBJITSERVICEM1@smrep_pub d3
+                   on d2.logical_name = d3.logical_name
+         left join kafka_version k
+                   on k.host_name = sm.host_name
+
+where
+        d2.type in ('bizservice', 'autSystem') and sm.CREATED_BY_DATE BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+UNION
+
+select
+    sm.host_name host_name,
+    sm.HOST_IP host_ip,
+    sm.tps_dns_name host_domain,
+    sm.server_ke host_KE,
+    sm.OS_ADMIN,
+    sm.kafka_ke KAFKA_KE,
+    sm.title KAFKA_NAME,
+    sm.assignment assignment_group,
+    d2.title stend_name,
+    d3.title AS_name,
+    sm.created_by_date created_by_date,
+    d4.J_PROVIDING_UNIT_NAME,
+    d3.logical_name AS_KE,
+    'false' PORT_7000,
+    'false' PORT_7010
+
+
+from sm_ke_host_kafka_prom sm
+         left join smprimary.cirelationsm1@smrep_pub r
+                   on sm.kafka_ke = r.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d1
+                   on r.logical_name = d1.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r1
+                   on d1.logical_name = r1.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d2
+                   on r1.logical_name = d2.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r2
+                   on d2.logical_name = r2.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d3
+                   on r2.logical_name = d3.logical_name
+         left join smprimary.SBJITSERVICEM1@smrep_pub d4
+                   on d3.logical_name = d4.logical_name
+         left join kafka_version k
+                   on k.host_name = sm.host_name
+
+
+where
+        d3.type in ('bizservice', 'autSystem') and sm.CREATED_BY_DATE BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+UNION
+
+select
+    sm.host_name host_name,
+    sm.HOST_IP host_ip,
+    sm.tps_dns_name host_domain,
+    sm.server_ke host_KE,
+    sm.OS_ADMIN,
+    sm.kafka_ke KAFKA_KE,
+    sm.title KAFKA_NAME,
+    sm.assignment assignment_group,
+    d2.title stend_name,
+    d4.title AS_name,
+    sm.created_by_date created_by_date,
+    d5.J_PROVIDING_UNIT_NAME,
+    d4.logical_name AS_KE,
+    'false' PORT_7000,
+    'false' PORT_7010
+
+
+from sm_ke_host_kafka_prom sm
+         left join smprimary.cirelationsm1@smrep_pub r
+                   on sm.kafka_ke = r.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d1
+                   on r.logical_name = d1.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r1
+                   on d1.logical_name = r1.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d2
+                   on r1.logical_name = d2.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r2
+                   on d2.logical_name = r2.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d3
+                   on r2.logical_name = d3.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r3
+                   on d3.logical_name = r3.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d4
+                   on r3.logical_name = d4.logical_name
+         left join smprimary.SBJITSERVICEM1@smrep_pub d5
+                   on d4.logical_name = d5.logical_name
+         left join kafka_version k
+                   on k.host_name = sm.host_name
+
+
+where
+        d4.type in ('bizservice', 'autSystem') and sm.CREATED_BY_DATE BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+order by CREATED_BY_DATE [42102-220]
+2024-02-12 14:45:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "SM_KE_HOST_KAFKA_PROM" не найдена
+Table "SM_KE_HOST_KAFKA_PROM" not found; SQL statement:
+select
+    sm.host_name host_name,
+    sm.HOST_IP host_ip,
+    sm.tps_dns_name host_domain,
+    sm.server_ke host_KE,
+    sm.OS_ADMIN,
+    sm.kafka_ke KAFKA_KE,
+    sm.title KAFKA_NAME,
+    sm.assignment assignment_group,
+    d1.title stend_name,
+    d2.title AS_name,
+    sm.created_by_date created_by_date,
+    d3.J_PROVIDING_UNIT_NAME,
+    d2.logical_name AS_KE,
+    'false' PORT_7000,
+    'false' PORT_7010
+
+
+from sm_ke_host_kafka_prom sm
+         left join smprimary.cirelationsm1@smrep_pub r
+                   on sm.kafka_ke = r.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d1
+                   on r.logical_name = d1.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r1
+                   on d1.logical_name = r1.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d2
+                   on r1.logical_name = d2.logical_name
+         left join smprimary.SBJITSERVICEM1@smrep_pub d3
+                   on d2.logical_name = d3.logical_name
+         left join kafka_version k
+                   on k.host_name = sm.host_name
+
+where
+        d2.type in ('bizservice', 'autSystem') and sm.CREATED_BY_DATE BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+UNION
+
+select
+    sm.host_name host_name,
+    sm.HOST_IP host_ip,
+    sm.tps_dns_name host_domain,
+    sm.server_ke host_KE,
+    sm.OS_ADMIN,
+    sm.kafka_ke KAFKA_KE,
+    sm.title KAFKA_NAME,
+    sm.assignment assignment_group,
+    d2.title stend_name,
+    d3.title AS_name,
+    sm.created_by_date created_by_date,
+    d4.J_PROVIDING_UNIT_NAME,
+    d3.logical_name AS_KE,
+    'false' PORT_7000,
+    'false' PORT_7010
+
+
+from sm_ke_host_kafka_prom sm
+         left join smprimary.cirelationsm1@smrep_pub r
+                   on sm.kafka_ke = r.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d1
+                   on r.logical_name = d1.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r1
+                   on d1.logical_name = r1.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d2
+                   on r1.logical_name = d2.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r2
+                   on d2.logical_name = r2.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d3
+                   on r2.logical_name = d3.logical_name
+         left join smprimary.SBJITSERVICEM1@smrep_pub d4
+                   on d3.logical_name = d4.logical_name
+         left join kafka_version k
+                   on k.host_name = sm.host_name
+
+
+where
+        d3.type in ('bizservice', 'autSystem') and sm.CREATED_BY_DATE BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+UNION
+
+select
+    sm.host_name host_name,
+    sm.HOST_IP host_ip,
+    sm.tps_dns_name host_domain,
+    sm.server_ke host_KE,
+    sm.OS_ADMIN,
+    sm.kafka_ke KAFKA_KE,
+    sm.title KAFKA_NAME,
+    sm.assignment assignment_group,
+    d2.title stend_name,
+    d4.title AS_name,
+    sm.created_by_date created_by_date,
+    d5.J_PROVIDING_UNIT_NAME,
+    d4.logical_name AS_KE,
+    'false' PORT_7000,
+    'false' PORT_7010
+
+
+from sm_ke_host_kafka_prom sm
+         left join smprimary.cirelationsm1@smrep_pub r
+                   on sm.kafka_ke = r.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d1
+                   on r.logical_name = d1.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r1
+                   on d1.logical_name = r1.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d2
+                   on r1.logical_name = d2.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r2
+                   on d2.logical_name = r2.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d3
+                   on r2.logical_name = d3.logical_name
+         left join smprimary.cirelationsm1@smrep_pub r3
+                   on d3.logical_name = r3.tps_related_cis
+         left join smprimary.device2m1@smrep_pub d4
+                   on r3.logical_name = d4.logical_name
+         left join smprimary.SBJITSERVICEM1@smrep_pub d5
+                   on d4.logical_name = d5.logical_name
+         left join kafka_version k
+                   on k.host_name = sm.host_name
+
+
+where
+        d4.type in ('bizservice', 'autSystem') and sm.CREATED_BY_DATE BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+order by CREATED_BY_DATE [42102-220]
+2024-02-12 14:45:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Функция "TO_TIMESTAMP" не найдена
+Function "TO_TIMESTAMP" not found; SQL statement:
+select
+
+       host_name,
+
+       ip host_ip,
+
+       host_domain,
+
+       host_ke,
+
+       os_admin,
+
+       skeeper_ke,
+
+       skeeper_name,
+
+       assignment_group,
+
+       stend_name,
+
+       as_name,
+
+       created_by_date,
+
+       J_PROVIDING_UNIT_NAME,
+
+       as_ke,
+
+       'true' PORT_7000
+
+from skeeper_as_name
+
+where
+created_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+order by created_by_date [90022-220]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.readFunction(Parser.java:3912)
+	at org.h2.command.Parser.readTermWithIdentifier(Parser.java:5297)
+	at org.h2.command.Parser.readTerm(Parser.java:4983)
+	at org.h2.command.Parser.readFactor(Parser.java:3463)
+	at org.h2.command.Parser.readSum(Parser.java:3450)
+	at org.h2.command.Parser.readConcat(Parser.java:3415)
+	at org.h2.command.Parser.readConditionRightHandSide(Parser.java:3233)
+	at org.h2.command.Parser.readCondition(Parser.java:3217)
+	at org.h2.command.Parser.readExpressionWithGlobalConditions(Parser.java:3115)
+	at org.h2.command.Parser.parseSelect(Parser.java:2953)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2834)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2690)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2669)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2662)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2655)
+	at org.h2.command.Parser.parseQuery(Parser.java:2624)
+	at org.h2.command.Parser.parsePrepared(Parser.java:732)
+	at org.h2.command.Parser.parse(Parser.java:697)
+	at org.h2.command.Parser.parse(Parser.java:669)
+	at org.h2.command.Parser.prepareCommand(Parser.java:577)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:634)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:557)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1116)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:92)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:288)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:327)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$5.doPrepare(StatementPreparerImpl.java:153)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:183)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareQueryStatement(StatementPreparerImpl.java:155)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.lambda$list$0(JdbcSelectExecutor.java:85)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:231)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:167)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getMetaData(AbstractResultSetAccess.java:36)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getColumnCount(AbstractResultSetAccess.java:52)
+	at org.hibernate.query.results.ResultSetMappingImpl.resolve(ResultSetMappingImpl.java:193)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:325)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:115)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:83)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:76)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:65)
+	at org.hibernate.query.sql.internal.NativeSelectQueryPlanImpl.performList(NativeSelectQueryPlanImpl.java:138)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.doList(NativeQueryImpl.java:623)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:427)
+	at org.hibernate.query.Query.getResultList(Query.java:120)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$DeferredQueryInvocationHandler.invoke(SharedEntityManagerCreator.java:415)
+	at jdk.proxy2/jdk.proxy2.$Proxy156.getResultList(Unknown Source)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$CollectionExecution.doExecute(JpaQueryExecution.java:129)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:92)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:149)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:137)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:164)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:385)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
+	at jdk.proxy2/jdk.proxy2.$Proxy140.findServerByDate(Unknown Source)
+	at ru.sberbank.cip_corax_get_cluster_name.view.SkeeperView.gridInit(SkeeperView.java:216)
+	at ru.sberbank.cip_corax_get_cluster_name.view.SkeeperView.<init>(SkeeperView.java:192)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:210)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:111)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:319)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:310)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1354)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1191)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:561)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:521)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:320)
+	at com.vaadin.flow.spring.SpringInstantiator.getOrCreate(SpringInstantiator.java:126)
+	at com.vaadin.flow.di.Instantiator.createRouteTarget(Instantiator.java:136)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.lambda$getRouteTarget$1(AbstractNavigationStateRenderer.java:132)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.getRouteTarget(AbstractNavigationStateRenderer.java:131)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEventAndPopulateChain(AbstractNavigationStateRenderer.java:480)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.createChainIfEmptyAndExecuteBeforeEnterNavigation(AbstractNavigationStateRenderer.java:461)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handle(AbstractNavigationStateRenderer.java:211)
+	at com.vaadin.flow.component.internal.JavaScriptNavigationStateRenderer.handle(JavaScriptNavigationStateRenderer.java:78)
+	at com.vaadin.flow.component.UI.handleNavigation(UI.java:1853)
+	at com.vaadin.flow.component.UI.renderViewForRoute(UI.java:1816)
+	at com.vaadin.flow.component.UI.connectClient(UI.java:1729)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.invokeMethod(PublishedServerEventHandlerRpcHandler.java:227)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.invokeMethod(PublishedServerEventHandlerRpcHandler.java:204)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.invokeMethod(PublishedServerEventHandlerRpcHandler.java:150)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.handleNode(PublishedServerEventHandlerRpcHandler.java:133)
+	at com.vaadin.flow.server.communication.rpc.AbstractRpcInvocationHandler.handle(AbstractRpcInvocationHandler.java:74)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocationData(ServerRpcHandler.java:466)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.lambda$handleInvocations$4(ServerRpcHandler.java:447)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocations(ServerRpcHandler.java:447)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleRpc(ServerRpcHandler.java:324)
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:114)
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:40)
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1573)
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:398)
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:642)
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:408)
+	at org.apache.catalina.core.ApplicationDispatcher.doForward(ApplicationDispatcher.java:313)
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:277)
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:141)
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:178)
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:51)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:225)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-02-12 14:45:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Функция "TO_TIMESTAMP" не найдена
+Function "TO_TIMESTAMP" not found; SQL statement:
+select
+
+       host_name,
+
+       ip host_ip,
+
+       host_domain,
+
+       host_ke,
+
+       os_admin,
+
+       sidec_ke,
+
+       sidec_name,
+
+       assignment_group,
+
+       stend_name,
+
+       as_name,
+
+       created_by_date,
+
+       J_PROVIDING_UNIT_NAME,
+
+       as_ke,
+
+       'true' PORT_8081,
+
+       'true' PORT_7030,
+
+from skeeper_as_name
+
+where
+created_by_date BETWEEN TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(?, 'DD.MM.RRRR HH24:MI:SS')
+
+order by created_by_date [90022-220]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.readFunction(Parser.java:3912)
+	at org.h2.command.Parser.readTermWithIdentifier(Parser.java:5297)
+	at org.h2.command.Parser.readTerm(Parser.java:4983)
+	at org.h2.command.Parser.readFactor(Parser.java:3463)
+	at org.h2.command.Parser.readSum(Parser.java:3450)
+	at org.h2.command.Parser.readConcat(Parser.java:3415)
+	at org.h2.command.Parser.readConditionRightHandSide(Parser.java:3233)
+	at org.h2.command.Parser.readCondition(Parser.java:3217)
+	at org.h2.command.Parser.readExpressionWithGlobalConditions(Parser.java:3115)
+	at org.h2.command.Parser.parseSelect(Parser.java:2953)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2834)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2690)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2669)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2662)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2655)
+	at org.h2.command.Parser.parseQuery(Parser.java:2624)
+	at org.h2.command.Parser.parsePrepared(Parser.java:732)
+	at org.h2.command.Parser.parse(Parser.java:697)
+	at org.h2.command.Parser.parse(Parser.java:669)
+	at org.h2.command.Parser.prepareCommand(Parser.java:577)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:634)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:557)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1116)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:92)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:288)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:327)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$5.doPrepare(StatementPreparerImpl.java:153)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:183)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareQueryStatement(StatementPreparerImpl.java:155)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.lambda$list$0(JdbcSelectExecutor.java:85)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:231)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:167)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getMetaData(AbstractResultSetAccess.java:36)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getColumnCount(AbstractResultSetAccess.java:52)
+	at org.hibernate.query.results.ResultSetMappingImpl.resolve(ResultSetMappingImpl.java:193)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:325)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:115)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:83)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:76)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:65)
+	at org.hibernate.query.sql.internal.NativeSelectQueryPlanImpl.performList(NativeSelectQueryPlanImpl.java:138)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.doList(NativeQueryImpl.java:623)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:427)
+	at org.hibernate.query.Query.getResultList(Query.java:120)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$DeferredQueryInvocationHandler.invoke(SharedEntityManagerCreator.java:415)
+	at jdk.proxy2/jdk.proxy2.$Proxy156.getResultList(Unknown Source)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$CollectionExecution.doExecute(JpaQueryExecution.java:129)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:92)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:149)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:137)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:164)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:385)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
+	at jdk.proxy2/jdk.proxy2.$Proxy139.findServerByDate(Unknown Source)
+	at ru.sberbank.cip_corax_get_cluster_name.view.SidecView.gridInit(SidecView.java:218)
+	at ru.sberbank.cip_corax_get_cluster_name.view.SidecView.<init>(SidecView.java:193)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:210)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:111)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:319)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:310)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1354)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1191)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:561)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:521)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:320)
+	at com.vaadin.flow.spring.SpringInstantiator.getOrCreate(SpringInstantiator.java:126)
+	at com.vaadin.flow.di.Instantiator.createRouteTarget(Instantiator.java:136)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.lambda$getRouteTarget$1(AbstractNavigationStateRenderer.java:132)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.getRouteTarget(AbstractNavigationStateRenderer.java:131)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEventAndPopulateChain(AbstractNavigationStateRenderer.java:480)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.createChainIfEmptyAndExecuteBeforeEnterNavigation(AbstractNavigationStateRenderer.java:461)
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handle(AbstractNavigationStateRenderer.java:211)
+	at com.vaadin.flow.component.internal.JavaScriptNavigationStateRenderer.handle(JavaScriptNavigationStateRenderer.java:78)
+	at com.vaadin.flow.component.UI.handleNavigation(UI.java:1853)
+	at com.vaadin.flow.component.UI.renderViewForRoute(UI.java:1816)
+	at com.vaadin.flow.component.UI.connectClient(UI.java:1729)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.invokeMethod(PublishedServerEventHandlerRpcHandler.java:227)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.invokeMethod(PublishedServerEventHandlerRpcHandler.java:204)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.invokeMethod(PublishedServerEventHandlerRpcHandler.java:150)
+	at com.vaadin.flow.server.communication.rpc.PublishedServerEventHandlerRpcHandler.handleNode(PublishedServerEventHandlerRpcHandler.java:133)
+	at com.vaadin.flow.server.communication.rpc.AbstractRpcInvocationHandler.handle(AbstractRpcInvocationHandler.java:74)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocationData(ServerRpcHandler.java:466)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.lambda$handleInvocations$4(ServerRpcHandler.java:447)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocations(ServerRpcHandler.java:447)
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleRpc(ServerRpcHandler.java:324)
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:114)
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:40)
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1573)
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:398)
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:642)
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:408)
+	at org.apache.catalina.core.ApplicationDispatcher.doForward(ApplicationDispatcher.java:313)
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:277)
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:141)
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:178)
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:51)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:225)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)

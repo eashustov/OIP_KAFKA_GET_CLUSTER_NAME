@@ -2,14 +2,16 @@ package ru.sberbank.cip_corax_get_cluster_name.repo.cipsidecrepo;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.sberbank.cip_corax_get_cluster_name.domain.CIPSIDECData;
 
 import java.util.List;
 
-@Component
+@Repository
 @Profile("dev")
-public abstract class CIPSIDECRepoDev implements CIPSIDECRepo {
+public interface CIPSIDECRepoDev extends CIPSIDECRepo {
+    @Override
     @Query(value = "select * from sidec_as_name p LIMIT 500", nativeQuery = true)
-    public abstract List<CIPSIDECData> findAll();
+    List<CIPSIDECData> findServerByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }
