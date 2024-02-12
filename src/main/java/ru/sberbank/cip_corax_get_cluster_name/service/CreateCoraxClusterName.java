@@ -7,10 +7,10 @@ import com.vaadin.flow.server.StreamResource;
 import ru.sberbank.cip_corax_get_cluster_name.view.MainView;
 
 
-public class CreateKafkaClusterName {
+public class CreateCoraxClusterName {
     public static java.util.List<String> kafkaClustersList = new ArrayList<>();
 
-    public CreateKafkaClusterName() {
+    public CreateCoraxClusterName() {
     }
 
 

@@ -4,13 +4,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.sberbank.cip_corax_get_cluster_name.domain.OIPKafkaData;
+import ru.sberbank.cip_corax_get_cluster_name.domain.CIPCoraxData;
 
 import java.util.List;
 
 @Repository
 @Profile("prod")
-public interface OIPKafkaRepoProd extends OIPKafkaRepo {
+public interface CIPCoraxRepoProd extends CIPCoraxRepo {
        @Override
        @Query(value = "select\n" +
                "    sm.host_name host_name,\n" +
@@ -140,5 +140,5 @@ public interface OIPKafkaRepoProd extends OIPKafkaRepo {
                "\n" +
                "order by CREATED_BY_DATE",
                nativeQuery = true)
-       List<OIPKafkaData> findServerByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
+       List<CIPCoraxData> findServerByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

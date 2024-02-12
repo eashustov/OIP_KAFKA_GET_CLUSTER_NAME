@@ -37,12 +37,11 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.sberbank.cip_corax_get_cluster_name.domain.OIPKafkaData;
-import ru.sberbank.cip_corax_get_cluster_name.repo.cipcoraxrepo.OIPKafkaRepo;
-import ru.sberbank.cip_corax_get_cluster_name.service.CreateKafkaClusterName;
+import ru.sberbank.cip_corax_get_cluster_name.domain.CIPCoraxData;
+import ru.sberbank.cip_corax_get_cluster_name.repo.cipcoraxrepo.CIPCoraxRepo;
+import ru.sberbank.cip_corax_get_cluster_name.service.CreateCoraxClusterName;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -60,9 +59,9 @@ import java.util.stream.Stream;
 public class MainView extends VerticalLayout {
     Anchor clusterNameDownloadToCSV;
     private H4 header;
-    private OIPKafkaRepo repo;
-    private Grid<OIPKafkaData> grid;
-    private GridListDataView<OIPKafkaData> dataView;
+    private CIPCoraxRepo repo;
+    private Grid<CIPCoraxData> grid;
+    private GridListDataView<CIPCoraxData> dataView;
 //    private RefreshThread thread;
     ServerFilter serverFilter;
     String startDate;
@@ -70,7 +69,7 @@ public class MainView extends VerticalLayout {
     DatePicker start_Date;
     DatePicker end_Date;
     DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    public static Set<OIPKafkaData> selectedKafkaServers = new HashSet<>();
+    public static Set<CIPCoraxData> selectedKafkaServers = new HashSet<>();
     Span serversCount = new Span();
     Span markedCount = new Span();
     Span filteredCount = new Span();
@@ -95,7 +94,7 @@ public class MainView extends VerticalLayout {
 //    }
 
     @Autowired
-    public MainView(OIPKafkaRepo repo) {
+    public MainView(CIPCoraxRepo repo) {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         start_Date = new DatePicker("Начало");
@@ -121,12 +120,12 @@ public class MainView extends VerticalLayout {
         //        Export to CSV list of kafka servers
         var streamResource = new StreamResource("kafkaServers.csv",
                 () -> {
-                    Stream<OIPKafkaData> OIPKafkaDataList = serverFilter.dataViewFiltered.getItems();
+                    Stream<CIPCoraxData> OIPKafkaDataList = serverFilter.dataViewFiltered.getItems();
                     StringWriter output = new StringWriter();
-                    StatefulBeanToCsv<OIPKafkaData> beanToCSV = null;
+                    StatefulBeanToCsv<CIPCoraxData> beanToCSV = null;
                     try {
-                        beanToCSV = new StatefulBeanToCsvBuilder<OIPKafkaData>(output)
-                                .withIgnoreField(OIPKafkaData.class, OIPKafkaData.class.getDeclaredField("KAFKA_NAME"))
+                        beanToCSV = new StatefulBeanToCsvBuilder<CIPCoraxData>(output)
+                                .withIgnoreField(CIPCoraxData.class, CIPCoraxData.class.getDeclaredField("KAFKA_NAME"))
                                 .build();
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
@@ -183,7 +182,7 @@ public class MainView extends VerticalLayout {
         menuBar.addItem("Столбцы");
 
         //Кнопка получения имен кластеров
-        clusterNameDownloadToCSV = new Anchor(CreateKafkaClusterName.getKafkaClusterName(), "Получить имена кластеров для Zabbix");
+        clusterNameDownloadToCSV = new Anchor(CreateCoraxClusterName.getKafkaClusterName(), "Получить имена кластеров для Zabbix");
         clusterNameDownloadToCSV.setTarget("_blank");
         Button buttonGetKafkaClustersName = new Button();
 //        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
@@ -212,13 +211,13 @@ public class MainView extends VerticalLayout {
         add(header, dateLayout, actions, grid, serversCount, markedCount, filteredCount);
 
 
-//        this.grid = new Grid<>(OIPKafkaData.class, false);
+//        this.grid = new Grid<>(CIPCoraxData.class, false);
 //        this.dataView = grid.setItems(repo.findAll());
 //        setHorizontalComponentAlignment(Alignment.CENTER, header);
 //        setJustifyContentMode(JustifyContentMode.START);
 //
 ////Grid View
-//        grid = new Grid<>(OIPKafkaData.class, false);
+//        grid = new Grid<>(CIPCoraxData.class, false);
 //        grid.setHeight("500px");
 //        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
 //        grid.setColumnReorderingAllowed(true);
@@ -232,7 +231,7 @@ public class MainView extends VerticalLayout {
 //            selectedKafkaServers = event.getAllSelectedItems();
 ////            selectedKafkaServers = null;
 ////            selectedKafkaServers = new HashSet<>(grid.getSelectedItems());
-//            clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+//            clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
 //            markedCount.setText(String.valueOf("Выделено серверов: " + selectedKafkaServers.size()));
 //            remove(markedCount);
 //            add(markedCount);
@@ -240,39 +239,39 @@ public class MainView extends VerticalLayout {
 //
 //
 //        ItemContextMenu itemContextMenu = new ItemContextMenu(grid);
-//        Grid.Column<OIPKafkaData> HOST_NAME = grid
-//                .addColumn(OIPKafkaData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
-//        Grid.Column<OIPKafkaData> HOST_IP = grid
-//                .addColumn(OIPKafkaData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
+//        Grid.Column<CIPCoraxData> HOST_NAME = grid
+//                .addColumn(CIPCoraxData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
+//        Grid.Column<CIPCoraxData> HOST_IP = grid
+//                .addColumn(CIPCoraxData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
 //        Grid.Column PORT_7000 = grid
 //                .addColumn(new ComponentRenderer<>(
-//                        OIPKafkaData -> {
+//                        CIPCoraxData -> {
 //                            Checkbox checkbox_7000 = new Checkbox("7000");
 //                            checkbox_7000.setValue(false);
 //                            checkbox_7000.setEnabled(false);
 //                            checkbox_7000.addValueChangeListener(event -> {
-//                                OIPKafkaData.setPORT_7000(event.getValue());
+//                                CIPCoraxData.setPORT_7000(event.getValue());
 //                                selectedKafkaServers = grid.getSelectedItems();
-//                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+//                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
 //                            });
 //
 //                            grid.addSelectionListener(event -> {
 //                                // Делать не активным чекбокс если строка не выбрана
-//                                if (event.getAllSelectedItems().contains(OIPKafkaData)) {
+//                                if (event.getAllSelectedItems().contains(CIPCoraxData)) {
 //                                    checkbox_7000.setEnabled(true);
 //                                } else {
 //                                    checkbox_7000.setEnabled(false);
 //                                }
 //                                //Выставить значение чекбокса как в обьекте
-//                                checkbox_7000.setValue(OIPKafkaData.getPORT_7000());
+//                                checkbox_7000.setValue(CIPCoraxData.getPORT_7000());
 //
 //                            });
 //                            //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
 //                            checkboxHeader_7000.addValueChangeListener(event -> {
-//                                OIPKafkaData.setPORT_7000(event.getValue());
+//                                CIPCoraxData.setPORT_7000(event.getValue());
 //                                checkbox_7000.setValue(event.getValue());
 //                                selectedKafkaServers = grid.getSelectedItems();
-//                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+//                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
 //                            });
 //                            return checkbox_7000;
 //                        }
@@ -281,68 +280,68 @@ public class MainView extends VerticalLayout {
 //                .setKey("PORT_7000");
 //        Grid.Column PORT_7010 = grid
 //                .addColumn(new ComponentRenderer<>(
-//                        OIPKafkaData -> {
+//                        CIPCoraxData -> {
 //                            Checkbox checkbox_7010 = new Checkbox("7010");
 //                            checkbox_7010.setValue(false);
 //                            checkbox_7010.setEnabled(false);
 //                            checkbox_7010.addValueChangeListener(event -> {
-//                                OIPKafkaData.setPORT_7010(event.getValue());
+//                                CIPCoraxData.setPORT_7010(event.getValue());
 //                                selectedKafkaServers = grid.getSelectedItems();
-//                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+//                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
 //                            });
 //
 //                            grid.addSelectionListener(event -> {
 //                                // Делать не активным чекбокс если строка не выбрана
-//                                if (event.getAllSelectedItems().contains(OIPKafkaData)) {
+//                                if (event.getAllSelectedItems().contains(CIPCoraxData)) {
 //                                    checkbox_7010.setEnabled(true);
 //                                } else {
 //                                    checkbox_7010.setEnabled(false);
 //                                }
 //                                //Выставить значение чекбокса как в обьекте
-//                                checkbox_7010.setValue(OIPKafkaData.getPORT_7010());
+//                                checkbox_7010.setValue(CIPCoraxData.getPORT_7010());
 //
 //                            });
 //                            //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
 //                            checkboxHeader_7010.addValueChangeListener(event -> {
-//                                OIPKafkaData.setPORT_7010(event.getValue());
+//                                CIPCoraxData.setPORT_7010(event.getValue());
 //                                checkbox_7010.setValue(event.getValue());
 //                                selectedKafkaServers = grid.getSelectedItems();
-//                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+//                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
 //                            });
 //                            return checkbox_7010;
 //                        }
 //                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт zookeeper (7010)")
 //                .setKey("PORT_7010");
-//        Grid.Column<OIPKafkaData> HOST_DOMAIN = grid
-//                .addColumn(OIPKafkaData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
-//        Grid.Column<OIPKafkaData> HOST_KE = grid
-//                .addColumn(OIPKafkaData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
-//        Grid.Column<OIPKafkaData> OS_ADMIN = grid
-//                .addColumn(OIPKafkaData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
-//        Grid.Column<OIPKafkaData> KAFKA_KE = grid
-//                .addColumn(OIPKafkaData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ стенда");
+//        Grid.Column<CIPCoraxData> HOST_DOMAIN = grid
+//                .addColumn(CIPCoraxData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
+//        Grid.Column<CIPCoraxData> HOST_KE = grid
+//                .addColumn(CIPCoraxData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
+//        Grid.Column<CIPCoraxData> OS_ADMIN = grid
+//                .addColumn(CIPCoraxData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
+//        Grid.Column<CIPCoraxData> KAFKA_KE = grid
+//                .addColumn(CIPCoraxData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ стенда");
 //        KAFKA_KE.setVisible(false);
-//        Grid.Column<OIPKafkaData> KAFKA_NAME = grid
-//                .addColumn(OIPKafkaData::getKAFKA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
+//        Grid.Column<CIPCoraxData> KAFKA_NAME = grid
+//                .addColumn(CIPCoraxData::getKAFKA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
 //        KAFKA_NAME.setVisible(false);
-//        Grid.Column<OIPKafkaData> ASSIGNMENT_GROUP = grid
-//                .addColumn(OIPKafkaData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
-//        Grid.Column<OIPKafkaData> STEND_NAME = grid
-//                .addColumn(OIPKafkaData::getSTEND_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название стенда");
+//        Grid.Column<CIPCoraxData> ASSIGNMENT_GROUP = grid
+//                .addColumn(CIPCoraxData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
+//        Grid.Column<CIPCoraxData> STEND_NAME = grid
+//                .addColumn(CIPCoraxData::getSTEND_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название стенда");
 //        STEND_NAME.setVisible(false);
-//        Grid.Column<OIPKafkaData> AS_NAME = grid
-//                .addColumn(OIPKafkaData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
-//        Grid.Column<OIPKafkaData> CREATED_BY_DATE = grid
-//                .addColumn(OIPKafkaData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
+//        Grid.Column<CIPCoraxData> AS_NAME = grid
+//                .addColumn(CIPCoraxData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
+//        Grid.Column<CIPCoraxData> CREATED_BY_DATE = grid
+//                .addColumn(CIPCoraxData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
 //        CREATED_BY_DATE.setVisible(false);
-//        Grid.Column<OIPKafkaData> J_PROVIDING_UNIT_NAME = grid
-//                .addColumn(OIPKafkaData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
+//        Grid.Column<CIPCoraxData> J_PROVIDING_UNIT_NAME = grid
+//                .addColumn(CIPCoraxData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
 //        J_PROVIDING_UNIT_NAME.setVisible(false);
-//        Grid.Column<OIPKafkaData> AS_KE = grid
-//                .addColumn(OIPKafkaData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
+//        Grid.Column<CIPCoraxData> AS_KE = grid
+//                .addColumn(CIPCoraxData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
 //        AS_KE.setVisible(false);
 //
-//        GridListDataView<OIPKafkaData> dataView = grid.setItems(repo.findAll());
+//        GridListDataView<CIPCoraxData> dataView = grid.setItems(repo.findAll());
 //        personFilter = new PersonFilter(dataView);
 //
 //        //Create headers for Grid
@@ -384,12 +383,12 @@ public class MainView extends VerticalLayout {
 ////        Export to CSV list of kafka servers
 //        var streamResource = new StreamResource("kafkaServers.csv",
 //                () -> {
-//                    Stream<OIPKafkaData> OIPKafkaDataList = personFilter.dataViewFiltered.getItems();
+//                    Stream<CIPCoraxData> OIPKafkaDataList = personFilter.dataViewFiltered.getItems();
 //                    StringWriter output = new StringWriter();
-//                    StatefulBeanToCsv<OIPKafkaData> beanToCSV = null;
+//                    StatefulBeanToCsv<CIPCoraxData> beanToCSV = null;
 //                    try {
-//                        beanToCSV = new StatefulBeanToCsvBuilder<OIPKafkaData>(output)
-//                                .withIgnoreField(OIPKafkaData.class, OIPKafkaData.class.getDeclaredField("KAFKA_NAME"))
+//                        beanToCSV = new StatefulBeanToCsvBuilder<CIPCoraxData>(output)
+//                                .withIgnoreField(CIPCoraxData.class, CIPCoraxData.class.getDeclaredField("KAFKA_NAME"))
 //                                .build();
 //                    } catch (NoSuchFieldException e) {
 //                        e.printStackTrace();
@@ -503,7 +502,7 @@ public class MainView extends VerticalLayout {
 
 
 //        //Кнопка получения имен кластеров
-//        clusterNameDownloadToCSV = new Anchor(CreateKafkaClusterName.getKafkaClusterName(), "Получить имена кластеров для Zabbix");
+//        clusterNameDownloadToCSV = new Anchor(CreateCoraxClusterName.getKafkaClusterName(), "Получить имена кластеров для Zabbix");
 //        clusterNameDownloadToCSV.setTarget("_blank");
 //        Button buttonGetKafkaClustersName = new Button();
 ////        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
@@ -536,7 +535,7 @@ public class MainView extends VerticalLayout {
             remove(grid, serversCount, markedCount, filteredCount);
             gridInit();
             serversCount.setText("Всего серверов: " + dataView.getItemCount());
-            clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+            clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
             markedCount.setText("Выделено серверов: 0");
             add(grid, serversCount, markedCount, filteredCount);
         });
@@ -547,13 +546,13 @@ public class MainView extends VerticalLayout {
     void gridInit(){
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
-        this.grid = new Grid<>(OIPKafkaData.class, false);
+        this.grid = new Grid<>(CIPCoraxData.class, false);
         this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
 //Grid View
-        grid = new Grid<>(OIPKafkaData.class, false);
+        grid = new Grid<>(CIPCoraxData.class, false);
         grid.setHeight("500px");
         grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
         grid.setColumnReorderingAllowed(true);
@@ -565,7 +564,7 @@ public class MainView extends VerticalLayout {
         grid.addSelectionListener(event -> {
 
             selectedKafkaServers = event.getAllSelectedItems();
-            clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+            clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
             markedCount.setText(String.valueOf("Выделено серверов: " + selectedKafkaServers.size()));
             remove(markedCount);
             add(markedCount);
@@ -573,10 +572,10 @@ public class MainView extends VerticalLayout {
 
 
         ItemContextMenu itemContextMenu = new ItemContextMenu(grid);
-        Grid.Column<OIPKafkaData> HOST_NAME = grid
-                .addColumn(OIPKafkaData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
-        Grid.Column<OIPKafkaData> HOST_IP = grid
-                .addColumn(OIPKafkaData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
+        Grid.Column<CIPCoraxData> HOST_NAME = grid
+                .addColumn(CIPCoraxData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
+        Grid.Column<CIPCoraxData> HOST_IP = grid
+                .addColumn(CIPCoraxData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
         Grid.Column PORT_7000 = grid
                 .addColumn(new ComponentRenderer<>(
                         OIPKafkaData -> {
@@ -586,7 +585,7 @@ public class MainView extends VerticalLayout {
                             checkbox_7000.addValueChangeListener(event -> {
                                 OIPKafkaData.setPORT_7000(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
-                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
                             });
 
                             grid.addSelectionListener(event -> {
@@ -605,7 +604,7 @@ public class MainView extends VerticalLayout {
                                 OIPKafkaData.setPORT_7000(event.getValue());
                                 checkbox_7000.setValue(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
-                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
                             });
                             return checkbox_7000;
                         }
@@ -621,7 +620,7 @@ public class MainView extends VerticalLayout {
                             checkbox_7010.addValueChangeListener(event -> {
                                 OIPKafkaData.setPORT_7010(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
-                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
                             });
 
                             grid.addSelectionListener(event -> {
@@ -640,38 +639,38 @@ public class MainView extends VerticalLayout {
                                 OIPKafkaData.setPORT_7010(event.getValue());
                                 checkbox_7010.setValue(event.getValue());
                                 selectedKafkaServers = grid.getSelectedItems();
-                                clusterNameDownloadToCSV.setHref(CreateKafkaClusterName.getKafkaClusterName());
+                                clusterNameDownloadToCSV.setHref(CreateCoraxClusterName.getKafkaClusterName());
                             });
                             return checkbox_7010;
                         }
                 )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт Kafka (7010)")
                 .setKey("PORT_7010");
-        Grid.Column<OIPKafkaData> HOST_DOMAIN = grid
-                .addColumn(OIPKafkaData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
-        Grid.Column<OIPKafkaData> HOST_KE = grid
-                .addColumn(OIPKafkaData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
-        Grid.Column<OIPKafkaData> OS_ADMIN = grid
-                .addColumn(OIPKafkaData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
-        Grid.Column<OIPKafkaData> KAFKA_KE = grid
-                .addColumn(OIPKafkaData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ кластера");
+        Grid.Column<CIPCoraxData> HOST_DOMAIN = grid
+                .addColumn(CIPCoraxData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
+        Grid.Column<CIPCoraxData> HOST_KE = grid
+                .addColumn(CIPCoraxData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
+        Grid.Column<CIPCoraxData> OS_ADMIN = grid
+                .addColumn(CIPCoraxData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
+        Grid.Column<CIPCoraxData> KAFKA_KE = grid
+                .addColumn(CIPCoraxData::getKAFKA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ кластера");
         KAFKA_KE.setVisible(true);
-        Grid.Column<OIPKafkaData> KAFKA_NAME = grid
-                .addColumn(OIPKafkaData::getKAFKA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
+        Grid.Column<CIPCoraxData> KAFKA_NAME = grid
+                .addColumn(CIPCoraxData::getKAFKA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
         KAFKA_NAME.setVisible(true);
-        Grid.Column<OIPKafkaData> ASSIGNMENT_GROUP = grid
-                .addColumn(OIPKafkaData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
-        Grid.Column<OIPKafkaData> STEND_NAME = grid
-                .addColumn(OIPKafkaData::getSTEND_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название стенда");
+        Grid.Column<CIPCoraxData> ASSIGNMENT_GROUP = grid
+                .addColumn(CIPCoraxData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
+        Grid.Column<CIPCoraxData> STEND_NAME = grid
+                .addColumn(CIPCoraxData::getSTEND_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название стенда");
         STEND_NAME.setVisible(false);
-        Grid.Column<OIPKafkaData> AS_KE = grid
-                .addColumn(OIPKafkaData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
-        Grid.Column<OIPKafkaData> AS_NAME = grid
-                .addColumn(OIPKafkaData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
-        Grid.Column<OIPKafkaData> CREATED_BY_DATE = grid
-                .addColumn(OIPKafkaData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
+        Grid.Column<CIPCoraxData> AS_KE = grid
+                .addColumn(CIPCoraxData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
+        Grid.Column<CIPCoraxData> AS_NAME = grid
+                .addColumn(CIPCoraxData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
+        Grid.Column<CIPCoraxData> CREATED_BY_DATE = grid
+                .addColumn(CIPCoraxData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
         CREATED_BY_DATE.setVisible(true);
-        Grid.Column<OIPKafkaData> J_PROVIDING_UNIT_NAME = grid
-                .addColumn(OIPKafkaData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
+        Grid.Column<CIPCoraxData> J_PROVIDING_UNIT_NAME = grid
+                .addColumn(CIPCoraxData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
         J_PROVIDING_UNIT_NAME.setVisible(false);
 
 
@@ -762,7 +761,7 @@ public class MainView extends VerticalLayout {
 
     static class ServerFilter {
 
-        private GridListDataView<OIPKafkaData> dataViewFiltered;
+        private GridListDataView<CIPCoraxData> dataViewFiltered;
         private String hostName;
         private String hostIP;
         private String hostDomain;
@@ -775,7 +774,7 @@ public class MainView extends VerticalLayout {
         private String ASName;
         private String CreatedByDate;
 
-        public ServerFilter(GridListDataView<OIPKafkaData>  dataView) {
+        public ServerFilter(GridListDataView<CIPCoraxData>  dataView) {
             this.dataViewFiltered = dataView;
             this.dataViewFiltered.addFilter(this::test);
 
@@ -837,18 +836,18 @@ public class MainView extends VerticalLayout {
         }
 
 
-        public boolean test(OIPKafkaData oipKafkaData) {
-            boolean matchesHostName = matches(oipKafkaData.getHOST_NAME(), hostName);
-            boolean matchesHostIP = matches(oipKafkaData.getHOST_IP(), hostIP);
-            boolean matchesHostDomain = matches(oipKafkaData.getHOST_DOMAIN(), hostDomain);
-            boolean matchesHostKE = matches(oipKafkaData.getHOST_KE(), hostKE);
-            boolean matchesOSAdmin = matches(oipKafkaData.getOS_ADMIN(), OSAdmin);
-            boolean matchesKafkaKE = matches(oipKafkaData.getKAFKA_KE(), kafkaKE);
-            boolean matchesKafkaName = matches(oipKafkaData.getKAFKA_NAME(), kafkaName);
-            boolean matchesAssignmentGroup = matches(oipKafkaData.getASSIGNMENT_GROUP(), assignmentGroup);
-            boolean matchesAS_KE = matches(oipKafkaData.getAS_KE(), AS_KE);
-            boolean matchesASName = matches(oipKafkaData.getAS_NAME(), ASName);
-            boolean matchesCreatedByDate = matches(oipKafkaData.getCREATED_BY_DATE(), CreatedByDate);
+        public boolean test(CIPCoraxData CIPCoraxData) {
+            boolean matchesHostName = matches(CIPCoraxData.getHOST_NAME(), hostName);
+            boolean matchesHostIP = matches(CIPCoraxData.getHOST_IP(), hostIP);
+            boolean matchesHostDomain = matches(CIPCoraxData.getHOST_DOMAIN(), hostDomain);
+            boolean matchesHostKE = matches(CIPCoraxData.getHOST_KE(), hostKE);
+            boolean matchesOSAdmin = matches(CIPCoraxData.getOS_ADMIN(), OSAdmin);
+            boolean matchesKafkaKE = matches(CIPCoraxData.getKAFKA_KE(), kafkaKE);
+            boolean matchesKafkaName = matches(CIPCoraxData.getKAFKA_NAME(), kafkaName);
+            boolean matchesAssignmentGroup = matches(CIPCoraxData.getASSIGNMENT_GROUP(), assignmentGroup);
+            boolean matchesAS_KE = matches(CIPCoraxData.getAS_KE(), AS_KE);
+            boolean matchesASName = matches(CIPCoraxData.getAS_NAME(), ASName);
+            boolean matchesCreatedByDate = matches(CIPCoraxData.getCREATED_BY_DATE(), CreatedByDate);
 
             return matchesHostName && matchesHostIP && matchesHostDomain && matchesHostKE &&
                     matchesOSAdmin && matchesKafkaKE && matchesKafkaName && matchesAssignmentGroup &&
@@ -868,7 +867,7 @@ public class MainView extends VerticalLayout {
             setOpenOnClick(true);
         }
 
-        void addColumnToggleItem(String label, Grid.Column<OIPKafkaData> column) {
+        void addColumnToggleItem(String label, Grid.Column<CIPCoraxData> column) {
             MenuItem menuItem = this.addItem(label, e -> {
                 column.setVisible(e.getSource().isChecked());
             });
@@ -878,8 +877,8 @@ public class MainView extends VerticalLayout {
     }
 
 
-    public static class ItemContextMenu extends GridContextMenu<OIPKafkaData> {
-        public ItemContextMenu(Grid<OIPKafkaData> target) {
+    public static class ItemContextMenu extends GridContextMenu<CIPCoraxData> {
+        public ItemContextMenu(Grid<CIPCoraxData> target) {
             super(target);
 
             addItem("Сканировать порты в Alpha/Omega", e -> e.getItem().ifPresent(incident -> {

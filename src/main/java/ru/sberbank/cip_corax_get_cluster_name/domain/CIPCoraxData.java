@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Entity
 //@Table(schema = "SMPRIMARY", name = "probsummarym1")
 @Table(name = "kafkaservers")
-public class OIPKafkaData {
+public class CIPCoraxData {
     @Id
     @Column(name = "HOST_NAME")
     private String HOST_NAME;
@@ -42,7 +42,7 @@ public class OIPKafkaData {
 
     private Boolean PORT_7000, PORT_7010 = false;
 
-    public OIPKafkaData(String HOST_NAME, String HOST_IP, Boolean PORT_7000, Boolean PORT_7010, String HOST_DOMAIN,
+    public CIPCoraxData(String HOST_NAME, String HOST_IP, Boolean PORT_7000, Boolean PORT_7010, String HOST_DOMAIN,
                         String HOST_KE, String OS_ADMIN, String KAFKA_KE,
                         String KAFKA_NAME, String ASSIGNMENT_GROUP, String STEND_NAME, String AS_NAME, String CREATED_BY_DATE,
                         String J_PROVIDING_UNIT_NAME, String AS_KE) {
@@ -128,13 +128,13 @@ public class OIPKafkaData {
         this.PORT_7010 = PORT_7010;
     }
 
-    public OIPKafkaData() {
+    public CIPCoraxData() {
 
     }
 
     @Override
     public String toString() {
-        return "OIPKafkaData{" +
+        return "CIPCoraxData{" +
                 "HOST_NAME='" + HOST_NAME + '\'' +
                 ", HOST_IP='" + HOST_IP + '\'' +
                 ", HOST_DOMAIN='" + HOST_DOMAIN + '\'' +

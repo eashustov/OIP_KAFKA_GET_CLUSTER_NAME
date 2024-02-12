@@ -6,23 +6,23 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.server.StreamResource;
-import ru.sberbank.cip_corax_get_cluster_name.domain.OIPKafkaData;
+import ru.sberbank.cip_corax_get_cluster_name.domain.CIPCoraxData;
 
 import java.io.*;
 import java.util.stream.Stream;
 
 public class ExporToCSV {
 
-    public static StreamResource exportToCSV(GridListDataView<OIPKafkaData> dataView){
+    public static StreamResource exportToCSV(GridListDataView<CIPCoraxData> dataView){
         //        Export to CSV
         var streamResource = new StreamResource("uspIncidents.csv",
                 () -> {
-                    Stream<OIPKafkaData> uspIncidentList = dataView.getItems();
+                    Stream<CIPCoraxData> uspIncidentList = dataView.getItems();
                     StringWriter output = new StringWriter();
-                    StatefulBeanToCsv<OIPKafkaData> beanToCSV = null;
+                    StatefulBeanToCsv<CIPCoraxData> beanToCSV = null;
                     try {
-                        beanToCSV = new StatefulBeanToCsvBuilder<OIPKafkaData>(output)
-                                .withIgnoreField(OIPKafkaData.class, OIPKafkaData.class.getDeclaredField("ACTION"))
+                        beanToCSV = new StatefulBeanToCsvBuilder<CIPCoraxData>(output)
+                                .withIgnoreField(CIPCoraxData.class, CIPCoraxData.class.getDeclaredField("ACTION"))
                                 .build();
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
