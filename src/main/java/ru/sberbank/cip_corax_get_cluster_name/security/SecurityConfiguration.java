@@ -2,6 +2,7 @@ package ru.sberbank.cip_corax_get_cluster_name.security;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,16 @@ import ru.sberbank.cip_corax_get_cluster_name.view.LoginView;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
+
+    private static String user;
+    @Value("${spring.ldap.authentication.userdnpatterns}")
+    String userDnPatterns;
+
+    @Value("${spring.ldap.authentication.groupsearchbase}")
+    String groupSearchBase;
+
+    @Value("${spring.ldap.authentication.url}")
+    String url;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -51,14 +62,15 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .ldapAuthentication()
-                .userDnPatterns("uid={0},ou=people")
-                .groupSearchBase("ou=groups")
+                .userDnPatterns(userDnPatterns)
+                .groupSearchBase(groupSearchBase)
                 .contextSource()
-                .url("ldap://localhost:8389/dc=springframework,dc=org")
-                .and()
-                .passwordCompare()
-                .passwordEncoder(new BCryptPasswordEncoder())
-                .passwordAttribute("userPassword");
+                .url(url);
+        ////For use embedded LDAP server for test purpose
+//                .and()
+//                .passwordCompare()
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .passwordAttribute("userPassword");
     }
 //    /**
 //     * Demo UserDetailsManager which only provides two hardcoded

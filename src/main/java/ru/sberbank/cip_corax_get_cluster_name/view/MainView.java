@@ -62,7 +62,6 @@ import java.util.stream.Stream;
 public class MainView extends VerticalLayout {
     private Anchor clusterNameDownloadToCSV;
     private H4 header;
-    @Autowired
     private CIPCoraxRepo repo;
     public static Grid<CIPCoraxData> grid;
     private GridListDataView<CIPCoraxData> dataView;
@@ -82,6 +81,7 @@ public class MainView extends VerticalLayout {
     MenuBar menuBar = new MenuBar();
 
 
+    @Autowired
     public MainView(CIPCoraxRepo repo) {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());

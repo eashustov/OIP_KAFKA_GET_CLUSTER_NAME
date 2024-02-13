@@ -34,7 +34,7 @@ public interface CIPSkeeperRepoProd extends CIPSkeeperRepo{
             "\n" +
             "       as_name,\n" +
             "\n" +
-            "       created_by_date,\n" +
+            "       to_char(created_by_date, 'DD.MM.RRRR HH24:MI:SS') as created_by_date,\n" +
             "\n" +
             "       J_PROVIDING_UNIT_NAME,\n" +
             "\n" +

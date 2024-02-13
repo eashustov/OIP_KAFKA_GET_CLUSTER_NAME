@@ -11,7 +11,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.sberbank.cip_corax_get_cluster_name.security.SecurityService;
+
 
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
