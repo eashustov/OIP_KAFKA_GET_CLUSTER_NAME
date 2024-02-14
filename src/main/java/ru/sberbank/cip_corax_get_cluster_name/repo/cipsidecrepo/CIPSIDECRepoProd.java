@@ -42,7 +42,7 @@ public interface CIPSIDECRepoProd extends CIPSIDECRepo {
             "\n" +
             "       'true' PORT_8081,\n" +
             "\n" +
-            "       'true' PORT_7030,\n" +
+            "       'true' PORT_7030\n" +
             "\n" +
             "from sidec_as_name\n" +
             "\n" +
