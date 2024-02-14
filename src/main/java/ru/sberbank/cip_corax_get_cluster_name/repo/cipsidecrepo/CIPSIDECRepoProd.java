@@ -44,7 +44,7 @@ public interface CIPSIDECRepoProd extends CIPSIDECRepo {
             "\n" +
             "       'true' PORT_7030,\n" +
             "\n" +
-            "from skeeper_as_name\n" +
+            "from sidec_as_name\n" +
             "\n" +
             "where\n" +
             "created_by_date BETWEEN TO_TIMESTAMP(" +
