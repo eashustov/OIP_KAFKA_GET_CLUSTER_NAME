@@ -34,6 +34,16 @@ objectclass: top
 objectclass: organizationalUnit
 ou: otherpeople
 
+dn: uid=cip,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Center of Integration
+sn: SberInfra
+uid: cip
+userPassword: cipspassword
+
 dn: uid=ben,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person

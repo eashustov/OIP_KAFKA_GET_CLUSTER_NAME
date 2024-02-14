@@ -28,7 +28,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         loginForm.setForgotPasswordButtonVisible(false);
 
         H2 logo_1 = new H2("Управление инфраструктурой серверов приложений:");
-        H2 logo_2 = new H2("Серверы Corax выданные из ДИ за период");
+        H2 logo_2 = new H2("Серверы ЦИП выданные из ДИ за период");
         logo_2.getStyle().set("margin-top", "1px");
 //        getStyle().set("background-color", "var(--lumo-contrast-5pct)")
 //                .set("display", "flex").set("justify-content", "center")
