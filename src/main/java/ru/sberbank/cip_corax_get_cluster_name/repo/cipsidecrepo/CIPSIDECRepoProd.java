@@ -40,7 +40,7 @@ public interface CIPSIDECRepoProd extends CIPSIDECRepo {
             "\n" +
             "       as_ke,\n" +
             "\n" +
-            "       'true' PORT_8081,\n" +
+            "       'true' PORT_8443,\n" +
             "\n" +
             "       'true' PORT_7030\n" +
             "\n" +

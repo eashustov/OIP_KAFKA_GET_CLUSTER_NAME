@@ -75,7 +75,7 @@ import java.util.stream.Stream;
         Span serversCount = new Span();
         Span markedCount = new Span();
         Span filteredCount = new Span();
-        Checkbox checkboxHeader_8081;
+        Checkbox checkboxHeader_8443;
         Checkbox checkboxHeader_7030;
         //Создание панели инструментов
         MenuBar menuBar = new MenuBar();
@@ -243,14 +243,14 @@ import java.util.stream.Stream;
                     .addColumn(CIPSIDECData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
             Grid.Column<CIPSIDECData> IP = grid
                     .addColumn(CIPSIDECData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
-            Grid.Column PORT_8081 = grid
+            Grid.Column PORT_8443 = grid
                     .addColumn(new ComponentRenderer<>(
                             CIPSIDECData -> {
-                                Checkbox checkbox_8081 = new Checkbox("8081");
-                                checkbox_8081.setValue(false);
-                                checkbox_8081.setEnabled(false);
-                                checkbox_8081.addValueChangeListener(event -> {
-                                    CIPSIDECData.setPORT_8081(event.getValue());
+                                Checkbox checkbox_8443 = new Checkbox("8443");
+                                checkbox_8443.setValue(false);
+                                checkbox_8443.setEnabled(false);
+                                checkbox_8443.addValueChangeListener(event -> {
+                                    CIPSIDECData.setPORT_8443(event.getValue());
                                     selectedSidecServers = grid.getSelectedItems();
                                     clusterNameDownloadToCSV.setHref(CreateSidecClusterName.getSidecClusterName());
                                 });
@@ -258,26 +258,26 @@ import java.util.stream.Stream;
                                 grid.addSelectionListener(event -> {
                                     // Делать не активным чекбокс если строка не выбрана
                                     if (event.getAllSelectedItems().contains(CIPSIDECData)) {
-                                        checkbox_8081.setEnabled(true);
+                                        checkbox_8443.setEnabled(true);
                                     } else {
-                                        checkbox_8081.setEnabled(false);
+                                        checkbox_8443.setEnabled(false);
                                     }
                                     //Выставить значение чекбокса как в обьекте
-                                    checkbox_8081.setValue(CIPSIDECData.getPORT_8081());
+                                    checkbox_8443.setValue(CIPSIDECData.getPORT_8443());
 
                                 });
                                 //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
-                                checkboxHeader_8081.addValueChangeListener(event -> {
-                                    CIPSIDECData.setPORT_8081(event.getValue());
-                                    checkbox_8081.setValue(event.getValue());
+                                checkboxHeader_8443.addValueChangeListener(event -> {
+                                    CIPSIDECData.setPORT_8443(event.getValue());
+                                    checkbox_8443.setValue(event.getValue());
                                     selectedSidecServers = grid.getSelectedItems();
                                     clusterNameDownloadToCSV.setHref(CreateSidecClusterName.getSidecClusterName());
                                 });
-                                return checkbox_8081;
+                                return checkbox_8443;
                             }
 
-                    )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт HTTP (8081)")
-                    .setKey("PORT_8081");
+                    )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт HTTP (8443)")
+                    .setKey("PORT_8443");
             Grid.Column PORT_7030 = grid
                     .addColumn(new ComponentRenderer<>(
                             CIPSIDECData -> {
@@ -353,10 +353,10 @@ import java.util.stream.Stream;
             headerRow.getCell(IP)
                     .setComponent(createFilterHeader("ip адрес", serverSidecFilter::setHostIP));
 
-            checkboxHeader_8081 = new Checkbox("8081");
-            checkboxHeader_8081.setValue(false);
+            checkboxHeader_8443 = new Checkbox("8443");
+            checkboxHeader_8443.setValue(false);
 
-            headerRow.getCell(PORT_8081).setComponent(checkboxHeader_8081);
+            headerRow.getCell(PORT_8443).setComponent(checkboxHeader_8443);
 
             checkboxHeader_7030 = new Checkbox("7030");
             checkboxHeader_7030.setValue(false);
@@ -384,7 +384,7 @@ import java.util.stream.Stream;
             ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuBar.getItems().get(2));
             columnToggleContextMenu.addColumnToggleItem("Имя сервера", HOST_NAME);
             columnToggleContextMenu.addColumnToggleItem("ip адрес", IP);
-            columnToggleContextMenu.addColumnToggleItem("Порт HTTP (8081)", PORT_8081);
+            columnToggleContextMenu.addColumnToggleItem("Порт HTTP (8443)", PORT_8443);
             columnToggleContextMenu.addColumnToggleItem("Порт JMX (7030)", PORT_7030);
             columnToggleContextMenu.addColumnToggleItem("Домен", HOST_DOMAIN);
             columnToggleContextMenu.addColumnToggleItem("КЭ кластера", SIDEC_KE);

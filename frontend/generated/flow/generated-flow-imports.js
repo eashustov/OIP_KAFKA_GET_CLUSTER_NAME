@@ -36,10 +36,10 @@ import '@vaadin/vaadin-lumo-styles/vaadin-iconset.js';
 
 const loadOnDemand = (key) => {
   const pending = [];
-  if (key === 'ad6be10b621c50295edae0a06e672c2e11b27baff6edaf8c67a247ebb02a6b3c') {
+  if (key === '0c95f3cdce7241304459a57ce766be6559b6671056301450ff3a4c79e012d61d') {
     pending.push(import('./chunks/chunk-a906b72f62f1c59e8b3cd3bcc03fd45f0cbf025ae6a48d79f7931f43fef6197d.js'));
   }
-  if (key === '0c95f3cdce7241304459a57ce766be6559b6671056301450ff3a4c79e012d61d') {
+  if (key === 'ad6be10b621c50295edae0a06e672c2e11b27baff6edaf8c67a247ebb02a6b3c') {
     pending.push(import('./chunks/chunk-a906b72f62f1c59e8b3cd3bcc03fd45f0cbf025ae6a48d79f7931f43fef6197d.js'));
   }
   return Promise.all(pending);

@@ -16,19 +16,19 @@ public class CreateSidecClusterName {
         public static StreamResource getSidecClusterName() {
             sidecClustersList.clear();
             SidecView.selectedSidecServers.forEach(cipSidecData -> {
-                if (cipSidecData.getPORT_7030() & !cipSidecData.getPORT_8081()){
+                if (cipSidecData.getPORT_7030() & !cipSidecData.getPORT_8443()){
                     sidecClustersList.add(",,," + cipSidecData.getHOST_NAME() + "," + cipSidecData.getHOST_IP() + "," +
                             "7030" + ",,,,,,,," + cipSidecData.getAS_NAME() + "[" + cipSidecData.getSIDEC_KE() + "]" + "," +
                             "SIDEC_" + cipSidecData.getAS_KE() + "_" + cipSidecData.getSIDEC_KE() + ",,,");
                 }
-                else if (cipSidecData.getPORT_8081() & !cipSidecData.getPORT_7030()){
+                else if (cipSidecData.getPORT_8443() & !cipSidecData.getPORT_7030()){
                     sidecClustersList.add(",,," + cipSidecData.getHOST_NAME() + "," + cipSidecData.getHOST_IP() + ",," +
-                            "8081" + ",,,,,,," + cipSidecData.getAS_NAME() + "[" + cipSidecData.getSIDEC_KE() + "]" + "," +
+                            "8443" + ",,,,,,," + cipSidecData.getAS_NAME() + "[" + cipSidecData.getSIDEC_KE() + "]" + "," +
                             "SIDEC_" + cipSidecData.getAS_KE() + "_" +cipSidecData.getSIDEC_KE() + ",,,");
                 }
-                else if (cipSidecData.getPORT_7030() & cipSidecData.getPORT_8081()) {
+                else if (cipSidecData.getPORT_7030() & cipSidecData.getPORT_8443()) {
                     sidecClustersList.add(",,," + cipSidecData.getHOST_NAME() + "," + cipSidecData.getHOST_IP() + "," +
-                            "7030,8081" + ",,,,,,," + cipSidecData.getAS_NAME() + "[" + cipSidecData.getSIDEC_KE() + "]" + "," +
+                            "7030,8443" + ",,,,,,," + cipSidecData.getAS_NAME() + "[" + cipSidecData.getSIDEC_KE() + "]" + "," +
                             "SIDEC_" + cipSidecData.getAS_KE() + "_" + cipSidecData.getSIDEC_KE() + ",,,");
                 }
                         });

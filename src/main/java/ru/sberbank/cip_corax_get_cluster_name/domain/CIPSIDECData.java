@@ -45,11 +45,11 @@ public class CIPSIDECData {
     @Column(name = "J_PROVIDING_UNIT_NAME")
     private String J_PROVIDING_UNIT_NAME;
 
-    private Boolean PORT_8081, PORT_7030 = true;
+    private Boolean PORT_8443, PORT_7030 = true;
 
     public CIPSIDECData(String HOST_NAME, String HOST_IP, String HOST_DOMAIN, String SIDEC_KE, String SIDEC_NAME,
                         String AS_NAME, String AS_KE, String CREATED_BY_DATE, String HOST_KE, String OS_ADMIN,
-                        String ASSIGNMENT_GROUP, String STEND_NAME, String j_PROVIDING_UNIT_NAME, Boolean PORT_8081, Boolean PORT_7030) {
+                        String ASSIGNMENT_GROUP, String STEND_NAME, String j_PROVIDING_UNIT_NAME, Boolean PORT_8443, Boolean PORT_7030) {
         this.HOST_NAME = HOST_NAME;
         this.HOST_IP = HOST_IP;
         this.HOST_DOMAIN = HOST_DOMAIN;
@@ -63,7 +63,7 @@ public class CIPSIDECData {
         this.ASSIGNMENT_GROUP = ASSIGNMENT_GROUP;
         this.STEND_NAME = STEND_NAME;
         this.J_PROVIDING_UNIT_NAME = j_PROVIDING_UNIT_NAME;
-        this.PORT_8081 = PORT_8081;
+        this.PORT_8443 = PORT_8443;
         this.PORT_7030 = PORT_7030;
     }
 
@@ -103,8 +103,8 @@ public class CIPSIDECData {
         return AS_NAME;
     }
 
-    public Boolean getPORT_8081() {
-        return PORT_8081;
+    public Boolean getPORT_8443() {
+        return PORT_8443;
     }
 
     public Boolean getPORT_7030() {
@@ -131,8 +131,8 @@ public class CIPSIDECData {
         return J_PROVIDING_UNIT_NAME;
     }
 
-    public void setPORT_8081(Boolean PORT_8081) {
-        this.PORT_8081 = PORT_8081;
+    public void setPORT_8443(Boolean PORT_8081) {
+        this.PORT_8443 = PORT_8081;
     }
 
     public void setPORT_7030(Boolean PORT_7030) {
@@ -155,7 +155,7 @@ public class CIPSIDECData {
                 ", ASSIGNMENT_GROUP='" + ASSIGNMENT_GROUP + '\'' +
                 ", STEND_NAME='" + STEND_NAME + '\'' +
                 ", J_PROVIDING_UNIT_NAME='" + J_PROVIDING_UNIT_NAME + '\'' +
-                ", PORT_8081=" + PORT_8081 +
+                ", PORT_8081=" + PORT_8443 +
                 ", PORT_7030=" + PORT_7030 +
                 '}';
     }
