@@ -3,19 +3,31 @@ package ru.sberbank.cip_corax_get_cluster_name;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class OIPKafkaGetClusterName {
+public class OIPKafkaGetClusterName extends SpringBootServletInitializer {
     private static ConfigurableApplicationContext context;
 
 
     public static void main(String[] args) {
-        context = SpringApplication.run(OIPKafkaGetClusterName.class, args);
+        context = SpringApplication.run(applicationClass, args);
 
         HeapControl ();
 
     }
+
+    //Блок для запуска на WildFly
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(applicationClass);
+    }
+
+    private static Class<OIPKafkaGetClusterName> applicationClass = OIPKafkaGetClusterName.class;
+//Блок для запуска на WildFly
+
 
     public static void HeapControl () {
         System.out.println("Heap контроль запущен");
