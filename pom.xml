@@ -24,8 +24,7 @@
         <java.version>17</java.version>
         <vaadin.version>24.3.2</vaadin.version>
     </properties>
-    <dependencies>
-        <!--Настройеи для WildFly-->
+    <dependencies>        <!--Настройеи для WildFly-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -55,11 +54,6 @@
             <artifactId>maven-war-plugin</artifactId>
             <version>3.4.0</version>
         </dependency>
-        <!--Конец настроек для WildFly-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
@@ -74,6 +68,11 @@
                 </exclusion>
             </exclusions>
             <version>${vaadin.version}</version>
+        </dependency>
+        <!--Конец настроек для WildFly-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <!-- tag::security[] -->
         <dependency>
