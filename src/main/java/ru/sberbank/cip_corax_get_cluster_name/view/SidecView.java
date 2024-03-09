@@ -141,10 +141,10 @@ import java.util.stream.Stream;
             SubMenu styleSubMenu = style.getSubMenu();
             MenuItem normal = styleSubMenu.addItem("Нормальный");
             normal.setCheckable(true);
-            normal.setChecked(true);
+            normal.setChecked(false);
             MenuItem compact = styleSubMenu.addItem("Компактный");
             compact.setCheckable(true);
-            compact.setChecked(false);
+            compact.setChecked(true);
 
             ComponentEventListener<ClickEvent<MenuItem>> NormalStylelistener = e -> {
                 if (e.getSource().isChecked()) {

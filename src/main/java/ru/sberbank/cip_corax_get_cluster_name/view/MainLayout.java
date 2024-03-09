@@ -54,6 +54,10 @@ public class MainLayout extends AppLayout {
                 new RouterLink("Серверы SIDEC выданные из ДИ за период", SidecView.class)
                 ,
                 new RouterLink("Серверы Skeeper выданные из ДИ за период", SkeeperView.class)
+                ,
+                new RouterLink("Серверы SOWA выданные из ДИ за период", SOWAView.class)
+                ,
+                new RouterLink("Аналитика по серверам выданных из ДИ за период", Analitics.class)
 //                new Anchor("https://google.com", "Аналитика", AnchorTarget.BLANK)
         ));
     }
