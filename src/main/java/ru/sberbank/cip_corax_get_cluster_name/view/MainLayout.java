@@ -3,15 +3,13 @@ package ru.sberbank.cip_corax_get_cluster_name.view;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.AnchorTarget;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import ru.sberbank.cip_corax_get_cluster_name.security.SecurityService;
+import ru.sberbank.cip_corax_get_cluster_name.view.analitics.Analitics;
 
 
 public class MainLayout extends AppLayout {
