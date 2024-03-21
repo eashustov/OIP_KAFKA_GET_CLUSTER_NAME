@@ -2,11 +2,9 @@ package ru.sberbank.cip_corax_get_cluster_name.repo.totalproductsharerepo;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.sberbank.cip_corax_get_cluster_name.domain.CIPServersData;
-import ru.sberbank.cip_corax_get_cluster_name.domain.ICIPTotalProductShareDataCount;
+import ru.sberbank.cip_corax_get_cluster_name.domain.ICIPTotalProductShareCountData;
 
 import java.util.List;
 
@@ -31,6 +29,6 @@ public interface TotalProductShareRepoDev extends TotalProductShareRepo {
             "    count(*), 'Platform V Corax (CI04085569)' as HPC_AFFECTED_ITEM_NAME\n" +
             "from KAFKASERVERS\n" +
             "order by COUNT desc", nativeQuery = true)
-    List<ICIPTotalProductShareDataCount> findIncHandleByAffectedItemCount(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<ICIPTotalProductShareCountData> findIncHandleByAffectedItemCount(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }
 

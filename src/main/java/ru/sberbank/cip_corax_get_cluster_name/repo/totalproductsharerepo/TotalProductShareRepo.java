@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.sberbank.cip_corax_get_cluster_name.domain.CIPServersData;
-import ru.sberbank.cip_corax_get_cluster_name.domain.ICIPTotalProductShareDataCount;
+import ru.sberbank.cip_corax_get_cluster_name.domain.ICIPTotalProductShareCountData;
 
 import java.util.List;
 
@@ -184,5 +184,5 @@ public interface TotalProductShareRepo extends CrudRepository<CIPServersData, St
             "to_timestamp(:endDate, 'DD.MM.YYYY HH24:MI:SS')\n" +
             ")\n" +
             "order by 1 desc", nativeQuery = true)
-    List<ICIPTotalProductShareDataCount> findIncHandleByAffectedItemCount(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<ICIPTotalProductShareCountData> findIncHandleByAffectedItemCount(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

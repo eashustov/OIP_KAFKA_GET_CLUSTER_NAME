@@ -18,7 +18,7 @@ import com.github.appreciated.apexcharts.config.responsive.builder.OptionsBuilde
 import com.github.appreciated.apexcharts.config.subtitle.Align;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import lombok.SneakyThrows;
-import ru.sberbank.cip_corax_get_cluster_name.domain.ICIPTotalProductShareDataCount;
+import ru.sberbank.cip_corax_get_cluster_name.domain.ICIPTotalProductShareCountData;
 import ru.sberbank.cip_corax_get_cluster_name.repo.totalproductsharerepo.TotalProductShareRepo;
 
 import java.time.format.DateTimeFormatter;
@@ -137,7 +137,7 @@ public class TotalProductShareDonutChart {
 
         labelsDataDonut = TotalProductShareRepo.findIncHandleByAffectedItemCount(startDate, endDate)
                 .stream()
-                .map(ICIPTotalProductShareDataCount::getHPC_Affected_Item_Name)
+                .map(ICIPTotalProductShareCountData::getHPC_Affected_Item_Name)
                 .collect(Collectors.toList());
     }
 }

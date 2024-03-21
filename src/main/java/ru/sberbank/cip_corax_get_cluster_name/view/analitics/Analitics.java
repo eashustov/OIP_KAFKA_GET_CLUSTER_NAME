@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import ru.sberbank.cip_corax_get_cluster_name.repo.productpermonthrepo.ProductPerMonthRepo;
 import ru.sberbank.cip_corax_get_cluster_name.repo.totalproductsharerepo.TotalProductShareRepo;
 import ru.sberbank.cip_corax_get_cluster_name.view.MainLayout;
 
@@ -21,6 +22,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static ru.sberbank.cip_corax_get_cluster_name.view.analitics.ProductPerMonthLineChart.ProductPerMonthLineChartInit;
 import static ru.sberbank.cip_corax_get_cluster_name.view.analitics.TotalProductShareDonutChart.TotalProductShareDonutChartInit;
 
 @PermitAll
@@ -29,9 +31,10 @@ import static ru.sberbank.cip_corax_get_cluster_name.view.analitics.TotalProduct
 public class Analitics extends VerticalLayout {
 
     TotalProductShareRepo TotalProductShareRepo;
+    ProductPerMonthRepo ProductPerMonthRepo;
      private H4 header;
     ApexCharts TotalProductShareDonutChart;
-    ApexCharts lineChart;
+    ApexCharts ProductPerMonthLineChart;
     String startDate;
     String endDate;
     DatePicker start_Date;
@@ -58,8 +61,9 @@ public class Analitics extends VerticalLayout {
 
     //Список ИТ услуг для обработки - будут добавляться элементы - Элемент "Все"
     List<String> typeAffectedItemList = new ArrayList<>(incLabelsDataBar);
-    public Analitics(TotalProductShareRepo TotalProductShareRepo) {
+    public Analitics(TotalProductShareRepo TotalProductShareRepo, ProductPerMonthRepo productPerMonthRepo) {
         this.TotalProductShareRepo = TotalProductShareRepo;
+        this.ProductPerMonthRepo = productPerMonthRepo;
         this.header = new H4("Аналитика по серверам выданных из ДИ за период");
         this.typeAffectedItemMultiComboBox = new MultiSelectComboBox<>();
         setHorizontalComponentAlignment(Alignment.CENTER, header);
@@ -78,11 +82,12 @@ public class Analitics extends VerticalLayout {
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";//Кнопка поиска
         TextField searchField = new TextField();
         searchField.getElement().setAttribute("aria-label", "search");
-        searchField.setPlaceholder("Найти инцидент");
+        searchField.setPlaceholder("Найти сервер");
         searchField.setClearButtonVisible(true);
         searchField.setPrefixComponent(VaadinIcon.SEARCH.create());
 
         TotalProductShareDonutChart = TotalProductShareDonutChartInit(TotalProductShareRepo,start_Date, end_Date, typeAffectedItemMultiComboBox.getValue());
+        ProductPerMonthLineChart = ProductPerMonthLineChartInit(productPerMonthRepo, start_Date, end_Date, typeAffectedItemMultiComboBox.getValue());
 
         //Кнопка запроса аналитики
         Button buttonQuery = new Button();
@@ -109,7 +114,7 @@ public class Analitics extends VerticalLayout {
 
         add(header, dateLayout);
 
-        formLayout.add(TotalProductShareDonutChart);
+        formLayout.add(TotalProductShareDonutChart, ProductPerMonthLineChart);
         add(formLayout);
     }
 
