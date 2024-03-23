@@ -1,6 +1,7 @@
 package ru.sberbank.cip_corax_get_cluster_name.view.analitics;
 
 import com.github.appreciated.apexcharts.ApexCharts;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -10,10 +11,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import ru.sberbank.cip_corax_get_cluster_name.repo.productpermonthrepo.ProductPerMonthRepo;
+import ru.sberbank.cip_corax_get_cluster_name.repo.service.SearchRepo;
 import ru.sberbank.cip_corax_get_cluster_name.repo.totalproductsharerepo.TotalProductShareRepo;
 import ru.sberbank.cip_corax_get_cluster_name.view.MainLayout;
 
@@ -21,8 +24,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.sberbank.cip_corax_get_cluster_name.view.analitics.ProductPerMonthLineChart.ProductPerMonthLineChartInit;
+import static ru.sberbank.cip_corax_get_cluster_name.view.analitics.SearchMethod.search;
 import static ru.sberbank.cip_corax_get_cluster_name.view.analitics.TotalProductShareDonutChart.TotalProductShareDonutChartInit;
 
 @PermitAll
@@ -32,6 +37,8 @@ public class Analitics extends VerticalLayout {
 
     TotalProductShareRepo TotalProductShareRepo;
     ProductPerMonthRepo ProductPerMonthRepo;
+
+    SearchRepo searchRepo;
      private H4 header;
     ApexCharts TotalProductShareDonutChart;
     ApexCharts ProductPerMonthLineChart;
@@ -61,9 +68,10 @@ public class Analitics extends VerticalLayout {
 
     //Список ИТ услуг для обработки - будут добавляться элементы - Элемент "Все"
     List<String> typeAffectedItemList = new ArrayList<>(incLabelsDataBar);
-    public Analitics(TotalProductShareRepo TotalProductShareRepo, ProductPerMonthRepo productPerMonthRepo) {
+    public Analitics(TotalProductShareRepo TotalProductShareRepo, ProductPerMonthRepo productPerMonthRepo, SearchRepo searchRepo) {
         this.TotalProductShareRepo = TotalProductShareRepo;
         this.ProductPerMonthRepo = productPerMonthRepo;
+        this.searchRepo = searchRepo;
         this.header = new H4("Аналитика по серверам выданных из ДИ за период");
         this.typeAffectedItemMultiComboBox = new MultiSelectComboBox<>();
         setHorizontalComponentAlignment(Alignment.CENTER, header);
@@ -116,6 +124,34 @@ public class Analitics extends VerticalLayout {
 
         formLayout.add(TotalProductShareDonutChart, ProductPerMonthLineChart);
         add(formLayout);
+
+        //Обработчик кнопки
+        buttonQuery.addClickListener(clickEvent -> {
+            typeAffectedItemMultiComboBox.clear();
+            selectedAffectedItemList = new ArrayList<>(typeAffectedItemMultiComboBox.getValue());
+            remove(typeAffectedItemMultiComboBox);
+            formLayout.removeAll();
+            remove(formLayout);
+            TotalProductShareDonutChart = TotalProductShareDonutChartInit(TotalProductShareRepo,start_Date, end_Date, typeAffectedItemMultiComboBox.getValue());
+            ProductPerMonthLineChart = ProductPerMonthLineChartInit(productPerMonthRepo, start_Date, end_Date, typeAffectedItemMultiComboBox.getValue());
+            try {
+                formLayout.add(TotalProductShareDonutChart, ProductPerMonthLineChart);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            add(formLayout);
+        });
+
+        //Обработчик поиска
+        searchField.setValueChangeMode(ValueChangeMode.ON_BLUR);
+        searchField.setValueChangeTimeout(3000);
+        searchField.addValueChangeListener(changeListener->{
+            if (!searchField.getValue().isEmpty())
+            {
+                search(start_Date,end_Date, searchField.getValue(), searchRepo);
+            }
+        });
+        searchField.addKeyPressListener(Key.ENTER, keyPressEvent -> search(start_Date,end_Date, searchField.getValue(), searchRepo));
     }
 
 }

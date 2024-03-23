@@ -32,6 +32,7 @@ public class CIPServersData {
     private String J_PROVIDING_UNIT_NAME;
     @Column(name = "AS_KE")
     private String AS_KE;
+    private String HPC_AFFECTED_ITEM_NAME;
 
     public CIPServersData(String HOST_NAME, String HOST_IP, String HOST_DOMAIN,
                           String HOST_KE, String OS_ADMIN, String ASSIGNMENT_GROUP, String AS_NAME, String CREATED_BY_DATE,
@@ -79,6 +80,13 @@ public class CIPServersData {
     public String getAS_KE() {
         return AS_KE;
     }
+    public String getHPC_AFFECTED_ITEM_NAME() {
+        if (HPC_AFFECTED_ITEM_NAME != null) {
+            return HPC_AFFECTED_ITEM_NAME;
+        }
+        return HPC_AFFECTED_ITEM_NAME = "";
+    }
+
     public CIPServersData() {
 
     }
@@ -96,6 +104,7 @@ public class CIPServersData {
                 ", CREATED_BY_DATE='" + CREATED_BY_DATE + '\'' +
                 ", J_PROVIDING_UNIT_NAME='" + J_PROVIDING_UNIT_NAME + '\'' +
                 ", AS_KE='" + AS_KE + '\'' +
+                ", HPC_AFFECTED_ITEM_NAME='" + HPC_AFFECTED_ITEM_NAME + '\'' +
                 '}';
     }
 }

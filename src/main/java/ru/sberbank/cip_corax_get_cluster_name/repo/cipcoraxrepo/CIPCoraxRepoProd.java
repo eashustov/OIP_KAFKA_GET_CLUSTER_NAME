@@ -29,7 +29,6 @@ public interface CIPCoraxRepoProd extends CIPCoraxRepo {
                "    'false' PORT_7000,\n" +
                "    'false' PORT_7010\n" +
                "\n" +
-               "\n" +
                "from sm_ke_host_kafka_prom sm\n" +
                "         left join smprimary.cirelationsm1@smrep_pub r\n" +
                "                   on sm.kafka_ke = r.tps_related_cis\n" +

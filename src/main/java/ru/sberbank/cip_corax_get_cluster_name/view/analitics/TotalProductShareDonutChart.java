@@ -130,12 +130,14 @@ public class TotalProductShareDonutChart {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
 
-        seriesDataDonut = TotalProductShareRepo.findIncHandleByAffectedItemCount(startDate, endDate)
+        List <ICIPTotalProductShareCountData> DataDonut = TotalProductShareRepo.findIncHandleByAffectedItemCount(startDate, endDate);
+
+        seriesDataDonut = DataDonut
                 .stream()
                 .map(t -> t.getCount().doubleValue())
                 .collect(Collectors.toList());
 
-        labelsDataDonut = TotalProductShareRepo.findIncHandleByAffectedItemCount(startDate, endDate)
+        labelsDataDonut = DataDonut
                 .stream()
                 .map(ICIPTotalProductShareCountData::getHPC_Affected_Item_Name)
                 .collect(Collectors.toList());

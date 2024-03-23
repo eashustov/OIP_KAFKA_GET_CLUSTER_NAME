@@ -5,6 +5,6 @@ public interface ICIPProductPerMonthData {
     String getHPC_Affected_Item_Name();
     String getMonth();
     String getMonth_Number();
-    String getYear_();
+    String getYear();
     Integer getCount_Srv();
 }

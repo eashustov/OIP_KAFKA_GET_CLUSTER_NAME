@@ -120,7 +120,7 @@ public class ProductPerMonthLineChart {
 
                 for (ICIPProductPerMonthData e : TotalCounPerMonthAnaliticsData) {
                     if (e.getHPC_Affected_Item_Name().equals(affectedItemName)) {
-                        String year = e.getYear_();
+                        String year = e.getYear();
                         String month = e.getMonth_Number();
                         Integer countSvr = e.getCount_Srv();
                         monthYearCountInc.put(year + " " + month, countSvr);
