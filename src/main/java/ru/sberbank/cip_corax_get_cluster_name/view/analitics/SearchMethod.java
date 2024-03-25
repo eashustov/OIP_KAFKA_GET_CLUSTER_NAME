@@ -59,6 +59,10 @@ class SearchMethod {
                 .addColumn(CIPServersData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
         Grid.Column<CIPServersData> HOST_KE = searchGrid
                 .addColumn(CIPServersData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
+        Grid.Column<CIPServersData> CLUSTER_NAME = searchGrid
+                .addColumn(CIPServersData::getCLUSTER_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
+        Grid.Column<CIPServersData> CLUSTER_KE = searchGrid
+                .addColumn(CIPServersData::getCLUSTER_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ кластера");
         Grid.Column<CIPServersData> OS_ADMIN = searchGrid
                 .addColumn(CIPServersData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
         Grid.Column<CIPServersData> ASSIGNMENT_GROUP = searchGrid

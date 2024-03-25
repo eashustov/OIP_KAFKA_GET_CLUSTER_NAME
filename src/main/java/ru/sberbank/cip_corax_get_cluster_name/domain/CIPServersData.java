@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -32,6 +33,10 @@ public class CIPServersData {
     private String J_PROVIDING_UNIT_NAME;
     @Column(name = "AS_KE")
     private String AS_KE;
+    @Getter
+    private String CLUSTER_NAME;
+    @Getter
+    private String CLUSTER_KE;
     private String HPC_AFFECTED_ITEM_NAME;
 
     public CIPServersData(String HOST_NAME, String HOST_IP, String HOST_DOMAIN,
@@ -104,6 +109,8 @@ public class CIPServersData {
                 ", CREATED_BY_DATE='" + CREATED_BY_DATE + '\'' +
                 ", J_PROVIDING_UNIT_NAME='" + J_PROVIDING_UNIT_NAME + '\'' +
                 ", AS_KE='" + AS_KE + '\'' +
+                ", CLUSTER_NAME='" + CLUSTER_NAME + '\'' +
+                ", CLUSTER_KE='" + CLUSTER_KE + '\'' +
                 ", HPC_AFFECTED_ITEM_NAME='" + HPC_AFFECTED_ITEM_NAME + '\'' +
                 '}';
     }
