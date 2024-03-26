@@ -38,7 +38,7 @@ public interface CIPSOWARepoProd extends CIPSOWARepo {
             "\n" +
             "       to_char(t1.create_date, 'DD.MM.RRRR HH24:MI:SS') created_by_date,\n" +
             "\n" +
-            "       t2.j_providing_unit_name j_providing_unit_name,\n" +
+            "       t2.j_providing_unit_name j_providing_unit_name\n" +
             "\n" +
             "from sm_ke_host_sowa t1\n" +
             "\n" +
@@ -47,8 +47,10 @@ public interface CIPSOWARepoProd extends CIPSOWARepo {
             "on t1.sowa_ke = t2.sowa_ke\n" +
             "\n" +
             "where\n" +
-            "t1.create_date BETWEEN TO_TIMESTAMP(" +
-            ":startDate, 'DD.MM.RRRR HH24:MI:SS') AND TO_TIMESTAMP(:endDate, 'DD.MM.RRRR HH24:MI:SS')\n" +
+            "t1.create_date BETWEEN " +
+            "TO_TIMESTAMP(:startDate, 'DD.MM.RRRR HH24:MI:SS')\n" +
+            " AND" +
+            " TO_TIMESTAMP(:endDate, 'DD.MM.RRRR HH24:MI:SS')\n" +
             "\n" +
             "order by t1.create_date desc", nativeQuery = true)
     List<CIPSOWAData> findServerByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);

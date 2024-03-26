@@ -66,7 +66,7 @@ public interface SearchRepoProd extends SearchRepo {
             "\n" +
             "            || ' ' || upper(t1.sowa_ke) || ' ' || upper(t1.title)\n" +
             "\n" +
-            "            like '%' || upper(:searchFilter) || '%'\n" +
+            "            like '%' || upper(:searchValue) || '%'\n" +
             "\n" +
             "\n" +
             "            UNION\n" +
@@ -121,7 +121,7 @@ public interface SearchRepoProd extends SearchRepo {
             "\n" +
             "|| ' ' || upper(os_admin) || ' ' || upper(as_name) || ' ' || upper(as_ke)\n" +
             "\n" +
-            "            || ' ' || upper(sidec_name) || ' ' || upper(sidec_ke) like '%' || upper(:searchFilter) || '%'\n" +
+            "            || ' ' || upper(sidec_name) || ' ' || upper(sidec_ke) like '%' || upper(:searchValue) || '%'\n" +
             "\n" +
             "\n" +
             "            UNION\n" +
@@ -177,7 +177,7 @@ public interface SearchRepoProd extends SearchRepo {
             "\n" +
             "            || ' ' || upper(os_admin) || ' ' || upper(as_name) || ' ' || upper(as_ke)\n" +
             "\n" +
-            "            || ' ' || upper(skeeper_name) || ' ' || upper(skeeper_ke) like '%' || upper(:searchFilter) || '%'\n" +
+            "            || ' ' || upper(skeeper_name) || ' ' || upper(skeeper_ke) like '%' || upper(:searchValue) || '%'\n" +
             "\n" +
             "\n" +
             "            UNION\n" +
@@ -259,7 +259,7 @@ public interface SearchRepoProd extends SearchRepo {
             "\n" +
             "            || ' ' || upper(sm.OS_ADMIN) || ' ' || upper(d2.title) || ' ' || upper(d2.logical_name)\n" +
             "\n" +
-            "            || ' ' || upper(sm.title) || ' ' || upper(sm.kafka_ke) like '%' || upper(:searchFilter) || '%'\n" +
+            "            || ' ' || upper(sm.title) || ' ' || upper(sm.kafka_ke) like '%' || upper(:searchValue) || '%'\n" +
             "\n" +
             "               UNION\n" +
             "\n" +
@@ -348,7 +348,7 @@ public interface SearchRepoProd extends SearchRepo {
             "\n" +
             "            || ' ' || upper(sm.OS_ADMIN) || ' ' || upper(d3.title) || ' ' || upper(d3.logical_name)\n" +
             "\n" +
-            "            || ' ' || upper(sm.title) || ' ' || upper(sm.kafka_ke) like '%' || upper(:searchFilter) || '%'\n" +
+            "            || ' ' || upper(sm.title) || ' ' || upper(sm.kafka_ke) like '%' || upper(:searchValue) || '%'\n" +
             "\n" +
             "               UNION\n" +
             "\n" +
