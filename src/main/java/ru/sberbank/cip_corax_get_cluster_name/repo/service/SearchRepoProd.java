@@ -447,7 +447,7 @@ public interface SearchRepoProd extends SearchRepo {
             "\n" +
             "            || ' ' || upper(sm.OS_ADMIN) || ' ' || upper(d4.title) || ' ' || upper(d4.logical_name)\n" +
             "\n" +
-            "            || ' ' || upper(sm.title) || ' ' || upper(sm.kafka_ke) like '%' || upper(:searchFilter) || '%'", nativeQuery = true)
+            "            || ' ' || upper(sm.title) || ' ' || upper(sm.kafka_ke) like '%' || upper(:searchValue) || '%'", nativeQuery = true)
 
     List<CIPServersData>findServerBySearch(@Param("startDate") String startDate,
                                            @Param("endDate") String endDate,
