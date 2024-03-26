@@ -556,6 +556,11 @@ public class MainView extends VerticalLayout {
         public ItemContextMenu(Grid<CIPCoraxData> target) {
             super(target);
 
+            addItem("Открыть в Service Manager", e -> e.getItem().ifPresent(server -> {
+                getUI().get().getPage().open(
+                        "https://servicemanager.ca.sbrf.ru/hpsm/index.do?lang=ru&ctx=docEngine&file=joinsbjserver&query=file.device%2Clogical.name%3D%22" + server.getHOST_KE() + "%22&action=&title=",
+                        "Открыть в Service Manager");
+            }));
             addItem("Сканировать порты в Alpha/Omega", e -> e.getItem().ifPresent(incident -> {
                 getUI().get().getPage().open(
                         "https://nlb-jenkins/cis/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",

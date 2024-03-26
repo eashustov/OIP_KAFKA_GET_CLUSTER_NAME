@@ -7,6 +7,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -42,6 +43,9 @@ class SearchMethod {
 
         Grid<CIPServersData> searchGrid = new Grid<>(CIPServersData.class, false);
         GridListDataView<CIPServersData> searchDataView = searchGrid.setItems(searchRepo.findServerBySearch(startDate,endDate,searchValue));
+
+        //Контекстное меню таблицы поиска
+        ItemContextMenu searchGridContextMenu = new ItemContextMenu(searchGrid);
 
 //        searchGrid.setAllRowsVisible(true); //Автоматическая высота таблицы в зависимости от количества строк
         searchGrid.setHeight("77%");
@@ -101,6 +105,33 @@ class SearchMethod {
                 + searchDataView.getItemCount()));
         dialog.open();
 
+    }
+
+    public static class ItemContextMenu extends GridContextMenu<CIPServersData> {
+        public ItemContextMenu(Grid<CIPServersData> target) {
+            super(target);
+
+            addItem("Открыть в Service Manager", e -> e.getItem().ifPresent(server -> {
+                getUI().get().getPage().open(
+                        "https://servicemanager.ca.sbrf.ru/hpsm/index.do?lang=ru&ctx=docEngine&file=joinsbjserver&query=file.device%2Clogical.name%3D%22" + server.getHOST_KE() + "%22&action=&title=",
+                        "Открыть в Service Manager");
+            }));
+            addItem("Сканировать порты в Alpha/Omega", e -> e.getItem().ifPresent(incident -> {
+                getUI().get().getPage().open(
+                        "https://nlb-jenkins/cis/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
+                        "Сканировать порты в Alpha/Omega");
+            }));
+            addItem("Сканировать порты в Sigma", e -> e.getItem().ifPresent(incident -> {
+                getUI().get().getPage().open(
+                        "https://nlb-jenkins-sigma/infra/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
+                        "Сканировать порты в Sigma");
+            }));
+            addItem("Сканировать порты в PCIDSS", e -> e.getItem().ifPresent(incident -> {
+                getUI().get().getPage().open(
+                        "https://nlb-jenkins-pcidss/infra/job/USP_Integration/job/toolsOIP/job/OIP_CHECK_ACCESS_PORT/",
+                        "Сканировать порты в PCIDSS");
+            }));
+        }
     }
 
 
