@@ -133,11 +133,11 @@
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.github.appreciated</groupId>-->
-<!--            <artifactId>apexcharts</artifactId>-->
-<!--            <version>23.0.1</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.github.appreciated</groupId>
+            <artifactId>apexcharts</artifactId>
+            <version>23.0.1</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

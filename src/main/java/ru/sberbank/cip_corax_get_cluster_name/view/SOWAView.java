@@ -32,15 +32,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.sberbank.cip_corax_get_cluster_name.domain.CIPSOWAData;
 import ru.sberbank.cip_corax_get_cluster_name.domain.CIPSkeeperData;
-import ru.sberbank.cip_corax_get_cluster_name.repo.cipskeeperrepo.CIPSkeeperRepo;
+import ru.sberbank.cip_corax_get_cluster_name.repo.cipsowarepo.CIPSOWARepo;
 import ru.sberbank.cip_corax_get_cluster_name.service.CreateSkeeperClusterName;
 
 import java.io.ByteArrayInputStream;
@@ -48,39 +48,39 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 @PermitAll
-@Route(value="skeeper", layout = MainLayout.class)
-@PageTitle("Серверы Skeeper выданные из ДИ за период")
+@Route(value="sowa", layout = MainLayout.class)
+@PageTitle("Серверы SOWA выданные из ДИ за период")
 //Сохранение состояния таблицы при обновлении
 //@PreserveOnRefresh
-public class SkeeperView extends VerticalLayout {
-    Anchor clusterNameDownloadToCSV;
+public class SOWAView extends VerticalLayout {
     private H4 header;
-    private CIPSkeeperRepo repo;
-    private Grid<CIPSkeeperData> grid;
-    private GridListDataView<CIPSkeeperData> dataView;
+    private CIPSOWARepo cipsowaRepo;
+    private Grid<CIPSOWAData> grid;
+    private GridListDataView<CIPSOWAData> dataView;
     //    private RefreshThread thread;
-    ServerSkeeperFilter serverSkeeperFilter;
+    ServerSOWAFilter serverSOWAFilter;
     String startDate;
     String endDate;
     DatePicker start_Date;
     DatePicker end_Date;
     DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    public static Set<CIPSkeeperData> selectedSkeeperServers = new HashSet<>();
+//    public static Set<CIPSOWAData> selectedSOWAServers = new HashSet<>();
     Span serversCount = new Span();
-    Span markedCount = new Span();
+//    Span markedCount = new Span();
     Span filteredCount = new Span();
     Checkbox checkboxHeader_7000;
     //Создание панели инструментов
     MenuBar menuBar = new MenuBar();
 
     @Autowired
-    public SkeeperView(CIPSkeeperRepo repo) {
+    public SOWAView(CIPSOWARepo cipsowaRepo) {
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         start_Date = new DatePicker("Начало");
@@ -100,24 +100,24 @@ public class SkeeperView extends VerticalLayout {
         buttonGetData.setEnabled(true);
 
 
-        this.repo = repo;
-        this.header = new H4("Серверы Skeeper выданные из ДИ за период");
+        this.cipsowaRepo = cipsowaRepo;
+        this.header = new H4("Серверы SOWA выданные из ДИ за период");
 
         //        Export to CSV list of skeeper servers
-        var streamResource = new StreamResource("skeeperServers.csv",
+        var streamResource = new StreamResource("SOWAServers.csv",
                 () -> {
-                    Stream<CIPSkeeperData> CIPSkeeperDataList = serverSkeeperFilter.dataViewFiltered.getItems();
+                    Stream<CIPSOWAData> CIPSOWADataList = serverSOWAFilter.dataViewFiltered.getItems();
                     StringWriter output = new StringWriter();
-                    StatefulBeanToCsv<CIPSkeeperData> beanToCSV = null;
+                    StatefulBeanToCsv<CIPSOWAData> beanToCSV = null;
                     try {
-                        beanToCSV = new StatefulBeanToCsvBuilder<CIPSkeeperData>(output)
-                                .withIgnoreField(CIPSkeeperData.class, CIPSkeeperData.class.getDeclaredField("SKEEPER_NAME"))
+                        beanToCSV = new StatefulBeanToCsvBuilder<CIPSOWAData>(output)
+                                .withIgnoreField(CIPSOWAData.class, CIPSOWAData.class.getDeclaredField("SOWA_NAME"))
                                 .build();
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     }
                     try {
-                        beanToCSV.write(CIPSkeeperDataList);
+                        beanToCSV.write(CIPSOWADataList);
                         var contents = output.toString();
                         return new ByteArrayInputStream(contents.getBytes());
                     } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
@@ -167,43 +167,35 @@ public class SkeeperView extends VerticalLayout {
         menuBar.addItem(downloadToCSV);
         menuBar.addItem("Столбцы");
 
-        //Кнопка получения имен кластеров
-        clusterNameDownloadToCSV = new Anchor(CreateSkeeperClusterName.getSkeeperClusterName(), "Получить имена кластеров для Zabbix");
-        clusterNameDownloadToCSV.setTarget("_blank");
-        Button buttonGetSkeeperClustersName = new Button();
-//        buttonDownloadCSV.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON);
-        clusterNameDownloadToCSV.removeAll();
-        clusterNameDownloadToCSV.add(buttonGetSkeeperClustersName);
-        buttonGetSkeeperClustersName.setText("Получить имена кластеров для Zabbix");
-        buttonGetSkeeperClustersName.setEnabled(true);
-
         // build top HorizontalLayout
         HorizontalLayout actions = new HorizontalLayout(menuBar);
         actions.setVerticalComponentAlignment(Alignment.END, menuBar);
         setHorizontalComponentAlignment(Alignment.END, actions);
 
         //Build DataLayout
-        HorizontalLayout dateLayout = new HorizontalLayout(start_Date, end_Date, buttonGetData, clusterNameDownloadToCSV);
+        HorizontalLayout dateLayout = new HorizontalLayout(start_Date, end_Date, buttonGetData);
         dateLayout.setVerticalComponentAlignment(Alignment.STRETCH, start_Date, end_Date);
-        dateLayout.setVerticalComponentAlignment(Alignment.END, buttonGetData, clusterNameDownloadToCSV);
+        dateLayout.setVerticalComponentAlignment(Alignment.END, buttonGetData);
         setHorizontalComponentAlignment(Alignment.CENTER, dateLayout);
 
         gridInit();
 
         serversCount.setText("Всего серверов: " + dataView.getItemCount());
-        markedCount.setText("Выделено серверов: 0");
+//        markedCount.setText("Выделено серверов: 0");
 
         //        Добавление компонентов в основной layout
-        add(header, dateLayout, actions, grid, serversCount, markedCount, filteredCount);
+//        add(header, dateLayout, actions, grid, serversCount, markedCount, filteredCount);
+        add(header, dateLayout, actions, grid, serversCount, filteredCount);
 
         //      Обработчик копки получения списка серверов
         buttonGetData.addClickListener(event -> {
-            remove(grid, serversCount, markedCount, filteredCount);
+//            remove(grid, serversCount, markedCount, filteredCount);
+            remove(grid, serversCount, filteredCount);
             gridInit();
             serversCount.setText("Всего серверов: " + dataView.getItemCount());
-            clusterNameDownloadToCSV.setHref(CreateSkeeperClusterName.getSkeeperClusterName());
-            markedCount.setText("Выделено серверов: 0");
-            add(grid, serversCount, markedCount, filteredCount);
+//            markedCount.setText("Выделено серверов: 0");
+//            add(grid, serversCount, markedCount, filteredCount);
+            add(grid, serversCount, filteredCount);
         });
 
     }
@@ -211,100 +203,65 @@ public class SkeeperView extends VerticalLayout {
     void gridInit() {
         startDate = start_Date.getValue().format(europeanDateFormatter) + " 00:00:00";
         endDate = end_Date.getValue().format(europeanDateFormatter) + " 23:59:59";
-        this.grid = new Grid<>(CIPSkeeperData.class, false);
-        this.dataView = grid.setItems(repo.findServerByDate(startDate, endDate));
+        this.grid = new Grid<>(CIPSOWAData.class, false);
+        this.dataView = grid.setItems(cipsowaRepo.findServerByDate(startDate, endDate));
         setHorizontalComponentAlignment(Alignment.CENTER, header);
         setJustifyContentMode(JustifyContentMode.START);
 
 //Grid View
-        grid = new Grid<>(CIPSkeeperData.class, false);
+        grid = new Grid<>(CIPSOWAData.class, false);
         grid.setHeight("500px");
         grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_ROW_STRIPES);
         grid.setColumnReorderingAllowed(true);
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 //        grid.asMultiSelect().select(personList.get(0), personList.get(1)); // Как выделить все строки в таблице
 
 //        // Получение списка выделенных обьектов - строк таблицы
 
-        grid.addSelectionListener(event -> {
-
-            selectedSkeeperServers = event.getAllSelectedItems();
-            clusterNameDownloadToCSV.setHref(CreateSkeeperClusterName.getSkeeperClusterName());
-            markedCount.setText(String.valueOf("Выделено серверов: " + selectedSkeeperServers.size()));
-            remove(markedCount);
-            add(markedCount);
-        });
+//        grid.addSelectionListener(event -> {
+//
+//            selectedSOWAServers = event.getAllSelectedItems();
+//            markedCount.setText(String.valueOf("Выделено серверов: " + selectedSOWAServers.size()));
+//            remove(markedCount);
+//            add(markedCount);
+//        });
 
 
         ItemContextMenu itemContextMenu = new ItemContextMenu(grid);
-        Grid.Column<CIPSkeeperData> HOST_NAME = grid
-                .addColumn(CIPSkeeperData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
-        Grid.Column<CIPSkeeperData> IP = grid
-                .addColumn(CIPSkeeperData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
-        Grid.Column PORT_7000 = grid
-                .addColumn(new ComponentRenderer<>(
-                        CIPSkeeperData -> {
-                            Checkbox checkbox_7000 = new Checkbox("7000");
-                            checkbox_7000.setValue(false);
-                            checkbox_7000.setEnabled(false);
-                            checkbox_7000.addValueChangeListener(event -> {
-                                CIPSkeeperData.setPORT_7000(event.getValue());
-                                selectedSkeeperServers = grid.getSelectedItems();
-                                clusterNameDownloadToCSV.setHref(CreateSkeeperClusterName.getSkeeperClusterName());
-                            });
-
-                            grid.addSelectionListener(event -> {
-                                // Делать не активным чекбокс если строка не выбрана
-                                if (event.getAllSelectedItems().contains(CIPSkeeperData)) {
-                                    checkbox_7000.setEnabled(true);
-                                } else {
-                                    checkbox_7000.setEnabled(false);
-                                }
-                                //Выставить значение чекбокса как в обьекте
-                                checkbox_7000.setValue(CIPSkeeperData.getPORT_7000());
-
-                            });
-                            //Выставит значения для всех чекбоксов в колонке как в чекбоксе заголовке
-                            checkboxHeader_7000.addValueChangeListener(event -> {
-                                CIPSkeeperData.setPORT_7000(event.getValue());
-                                checkbox_7000.setValue(event.getValue());
-                                selectedSkeeperServers = grid.getSelectedItems();
-                                clusterNameDownloadToCSV.setHref(CreateSkeeperClusterName.getSkeeperClusterName());
-                            });
-                            return checkbox_7000;
-                        }
-                )).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Порт JMX (7000)")
-                .setKey("PORT_7000");
-        Grid.Column<CIPSkeeperData> HOST_DOMAIN = grid
-                .addColumn(CIPSkeeperData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
-        Grid.Column<CIPSkeeperData> HOST_KE = grid
-                .addColumn(CIPSkeeperData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
-        Grid.Column<CIPSkeeperData> OS_ADMIN = grid
-                .addColumn(CIPSkeeperData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
-        Grid.Column<CIPSkeeperData> SKEEPER_KE = grid
-                .addColumn(CIPSkeeperData::getSKEEPER_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ кластера");
-        SKEEPER_KE.setVisible(true);
-        Grid.Column<CIPSkeeperData> SKEEPER_NAME = grid
-                .addColumn(CIPSkeeperData::getSKEEPER_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название кластера");
-        SKEEPER_NAME.setVisible(true);
-        Grid.Column<CIPSkeeperData> ASSIGNMENT_GROUP = grid
-                .addColumn(CIPSkeeperData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
-        Grid.Column<CIPSkeeperData> STEND_NAME = grid
-                .addColumn(CIPSkeeperData::getSTEND_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название стенда");
-        STEND_NAME.setVisible(false);
-        Grid.Column<CIPSkeeperData> AS_KE = grid
-                .addColumn(CIPSkeeperData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
-        Grid.Column<CIPSkeeperData> AS_NAME = grid
-                .addColumn(CIPSkeeperData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
-        Grid.Column<CIPSkeeperData> CREATED_BY_DATE = grid
-                .addColumn(CIPSkeeperData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
+        Grid.Column<CIPSOWAData> HOST_NAME = grid
+                .addColumn(CIPSOWAData::getHOST_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Имя сервера");
+        Grid.Column<CIPSOWAData> HOST_IP = grid
+                .addColumn(CIPSOWAData::getHOST_IP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ip адрес");
+        Grid.Column<CIPSOWAData> HOST_DOMAIN = grid
+                .addColumn(CIPSOWAData::getHOST_DOMAIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Домен");
+        Grid.Column<CIPSOWAData> HOST_KE = grid
+                .addColumn(CIPSOWAData::getHOST_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ сервера");
+        Grid.Column<CIPSOWAData> OS_ADMIN = grid
+                .addColumn(CIPSOWAData::getOS_ADMIN).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения ОС");
+        Grid.Column<CIPSOWAData> SOWA_KE = grid
+                .addColumn(CIPSOWAData::getSOWA_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("SOWA КЭ");
+        SOWA_KE.setVisible(true);
+        Grid.Column<CIPSOWAData> SOWA_NAME = grid
+                .addColumn(CIPSOWAData::getSOWA_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("SOWA название");
+        SOWA_NAME.setVisible(true);
+        Grid.Column<CIPSOWAData> ASSIGNMENT_GROUP = grid
+                .addColumn(CIPSOWAData::getASSIGNMENT_GROUP).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Группа сопровождения");
+        Grid.Column<CIPSOWAData> ENVIRONMENT = grid
+                .addColumn(CIPSOWAData::getENVIRONMENT).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Тип среды");
+        ENVIRONMENT.setVisible(true);
+        Grid.Column<CIPSOWAData> AS_KE = grid
+                .addColumn(CIPSOWAData::getAS_KE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("КЭ АС");
+        Grid.Column<CIPSOWAData> AS_NAME = grid
+                .addColumn(CIPSOWAData::getAS_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Название АС");
+        Grid.Column<CIPSOWAData> CREATED_BY_DATE = grid
+                .addColumn(CIPSOWAData::getCREATED_BY_DATE).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("Дата выдачи");
         CREATED_BY_DATE.setVisible(true);
-        Grid.Column<CIPSkeeperData> J_PROVIDING_UNIT_NAME = grid
-                .addColumn(CIPSkeeperData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
+        Grid.Column<CIPSOWAData> J_PROVIDING_UNIT_NAME = grid
+                .addColumn(CIPSOWAData::getJ_PROVIDING_UNIT_NAME).setSortable(true).setResizable(true).setTextAlign(ColumnTextAlign.START).setHeader("ДИТ");
         J_PROVIDING_UNIT_NAME.setVisible(false);
 
 
-        serverSkeeperFilter = new ServerSkeeperFilter(grid.setItems(repo.findServerByDate(startDate, endDate)));
+        serverSOWAFilter = new ServerSOWAFilter(grid.setItems(cipsowaRepo.findServerByDate(startDate, endDate)));
 
         //Create headers for Grid
 
@@ -312,52 +269,51 @@ public class SkeeperView extends VerticalLayout {
         HeaderRow headerRow = grid.appendHeaderRow();
 
         headerRow.getCell(HOST_NAME)
-                .setComponent(createFilterHeader("Имя сервера", serverSkeeperFilter::setHostName));
-        headerRow.getCell(IP)
-                .setComponent(createFilterHeader("ip адрес", serverSkeeperFilter::setHostIP));
-
-        checkboxHeader_7000 = new Checkbox("7000");
-        checkboxHeader_7000.setValue(false);
-
-        headerRow.getCell(PORT_7000).setComponent(checkboxHeader_7000);
-
-        headerRow.getCell(HOST_DOMAIN)
-                .setComponent(createFilterHeader("Домен", serverSkeeperFilter::setHostDomain));
-        headerRow.getCell(SKEEPER_KE)
-                .setComponent(createFilterHeader("КЭ кластера", serverSkeeperFilter::setSkeeperKE));
-        headerRow.getCell(SKEEPER_NAME)
-                .setComponent(createFilterHeader("Название кластера", serverSkeeperFilter::setSkeeperName));
-        headerRow.getCell(AS_KE)
-                .setComponent(createFilterHeader("КЭ АС", serverSkeeperFilter::setAS_KE));
-        headerRow.getCell(AS_NAME)
-                .setComponent(createFilterHeader("Название АС", serverSkeeperFilter::setASName));
-        headerRow.getCell(CREATED_BY_DATE)
-                .setComponent(createFilterHeader("Дата выдачи", serverSkeeperFilter::setCreatedByDate));
+                .setComponent(createFilterHeader("Имя сервера", serverSOWAFilter::setHostName));
+        headerRow.getCell(HOST_IP)
+                .setComponent(createFilterHeader("ip адрес", serverSOWAFilter::setHostIP));
         headerRow.getCell(HOST_KE)
-                .setComponent(createFilterHeader("КЭ сервера", serverSkeeperFilter::setHostKE));
+                .setComponent(createFilterHeader("КЭ сервера", serverSOWAFilter::setHostKE));
+        headerRow.getCell(HOST_DOMAIN)
+                .setComponent(createFilterHeader("Домен", serverSOWAFilter::setHostDomain));
+        headerRow.getCell(SOWA_KE)
+                .setComponent(createFilterHeader("SOWA КЭ", serverSOWAFilter::setSOWAKE));
+        headerRow.getCell(SOWA_NAME)
+                .setComponent(createFilterHeader("SOWA название", serverSOWAFilter::setSOWAName));
+        headerRow.getCell(AS_KE)
+                .setComponent(createFilterHeader("КЭ АС", serverSOWAFilter::setAS_KE));
+        headerRow.getCell(AS_NAME)
+                .setComponent(createFilterHeader("Название АС", serverSOWAFilter::setASName));
+        headerRow.getCell(ENVIRONMENT)
+                .setComponent(FilterComboBox.createFilterHeader("Пром; Тест",
+                        serverSOWAFilter::setEnvironment, new HashSet<>(Arrays.asList("Пром", "Тест")), "Пром; Тест"));
+        headerRow.getCell(CREATED_BY_DATE)
+                .setComponent(createFilterHeader("Дата выдачи", serverSOWAFilter::setCreatedByDate));
+        headerRow.getCell(HOST_KE)
+                .setComponent(createFilterHeader("КЭ сервера", serverSOWAFilter::setHostKE));
         headerRow.getCell(OS_ADMIN)
-                .setComponent(createFilterHeader("Группа сопровождения ОС", serverSkeeperFilter::setOSAdmin));
+                .setComponent(createFilterHeader("Группа сопровождения ОС", serverSOWAFilter::setOSAdmin));
         headerRow.getCell(ASSIGNMENT_GROUP)
-                .setComponent(createFilterHeader("Группа сопровождения", serverSkeeperFilter::setAssignmentGroup));
+                .setComponent(createFilterHeader("Группа сопровождения", serverSOWAFilter::setAssignmentGroup));
 
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuBar.getItems().get(2));
         columnToggleContextMenu.addColumnToggleItem("Имя сервера", HOST_NAME);
-        columnToggleContextMenu.addColumnToggleItem("ip адрес", IP);
-        columnToggleContextMenu.addColumnToggleItem("Порт JMX (7000)", PORT_7000);
+        columnToggleContextMenu.addColumnToggleItem("ip адрес", HOST_IP);
         columnToggleContextMenu.addColumnToggleItem("Домен", HOST_DOMAIN);
-        columnToggleContextMenu.addColumnToggleItem("КЭ кластера", SKEEPER_KE);
-        columnToggleContextMenu.addColumnToggleItem("Название кластера", SKEEPER_NAME);
+        columnToggleContextMenu.addColumnToggleItem("SOWA КЭ", SOWA_KE);
+        columnToggleContextMenu.addColumnToggleItem("SOWA название", SOWA_NAME);
         columnToggleContextMenu.addColumnToggleItem("КЭ АС", AS_KE);
         columnToggleContextMenu.addColumnToggleItem("Название АС", AS_NAME);
+        columnToggleContextMenu.addColumnToggleItem("Тип среды", ENVIRONMENT);
         columnToggleContextMenu.addColumnToggleItem("КЭ сервера", HOST_KE);
         columnToggleContextMenu.addColumnToggleItem("Группа сопровождения ОС", OS_ADMIN);
         columnToggleContextMenu.addColumnToggleItem("Группа сопровождения", ASSIGNMENT_GROUP);
 
 
         // Обновление данных счетчика по отфильтрованным элементам
-        serverSkeeperFilter.dataViewFiltered.addItemCountChangeListener(event -> {
+        serverSOWAFilter.dataViewFiltered.addItemCountChangeListener(event -> {
             remove(filteredCount);
-            filteredCount.setText("Отфильтровано: " + serverSkeeperFilter.dataViewFiltered.getItemCount());
+            filteredCount.setText("Отфильтровано: " + serverSOWAFilter.dataViewFiltered.getItemCount());
             add(filteredCount);
 //            System.out.println("Отфильтровано: " + serverFilter.dataViewFiltered.getItemCount());
         });
@@ -384,22 +340,23 @@ public class SkeeperView extends VerticalLayout {
         return layout;
     }
 
-    static class ServerSkeeperFilter {
+    static class ServerSOWAFilter {
 
-        private GridListDataView<CIPSkeeperData> dataViewFiltered;
+        private GridListDataView<CIPSOWAData> dataViewFiltered;
         private String hostName;
         private String hostIP;
         private String hostDomain;
-        private String skeeperKE;
-        private String skeeperName;
+        private String SOWA_KE;
+        private String SOWAName;
         private String AS_KE;
         private String ASName;
         private String CreatedByDate;
         private String hostKE;
         private String OSAdmin;
         private String assignmentGroup;
+        private String environment;
 
-        public ServerSkeeperFilter(GridListDataView<CIPSkeeperData> dataView) {
+        public ServerSOWAFilter(GridListDataView<CIPSOWAData> dataView) {
             this.dataViewFiltered = dataView;
             this.dataViewFiltered.addFilter(this::test);
 
@@ -420,13 +377,13 @@ public class SkeeperView extends VerticalLayout {
             this.dataViewFiltered.refreshAll();
         }
 
-        public void setSkeeperKE(String skeeperKE) {
-            this.skeeperKE = skeeperKE;
+        public void setSOWAKE(String SOWA_KE) {
+            this.SOWA_KE = SOWA_KE;
             this.dataViewFiltered.refreshAll();
         }
 
-        public void setSkeeperName(String skeeperName) {
-            this.skeeperName = skeeperName;
+        public void setSOWAName(String SOWAName) {
+            this.SOWAName = SOWAName;
             this.dataViewFiltered.refreshAll();
         }
 
@@ -459,23 +416,29 @@ public class SkeeperView extends VerticalLayout {
             this.dataViewFiltered.refreshAll();
         }
 
+        public void setEnvironment(String environment) {
+            this.environment = environment;
+            this.dataViewFiltered.refreshAll();
+        }
 
-        public boolean test(CIPSkeeperData cipSkeeperData) {
-            boolean matchesHostName = matches(cipSkeeperData.getHOST_NAME(), hostName);
-            boolean matchesHostIP = matches(cipSkeeperData.getHOST_IP(), hostIP);
-            boolean matchesHostDomain = matches(cipSkeeperData.getHOST_DOMAIN(), hostDomain);
-            boolean matchesSkeeperKE = matches(cipSkeeperData.getSKEEPER_KE(), skeeperKE);
-            boolean matchesSkeeperName = matches(cipSkeeperData.getSKEEPER_NAME(), skeeperName);
-            boolean matchesAS_KE = matches(cipSkeeperData.getAS_KE(), AS_KE);
-            boolean matchesASName = matches(cipSkeeperData.getAS_NAME(), ASName);
-            boolean matchesCreatedByDate = matches(cipSkeeperData.getCREATED_BY_DATE(), CreatedByDate);
-            boolean matchesHostKE = matches(cipSkeeperData.getHOST_KE(), hostKE);
-            boolean matchesOSAdmin = matches(cipSkeeperData.getOS_ADMIN(), OSAdmin);
-            boolean matchesAssignmentGroup = matches(cipSkeeperData.getASSIGNMENT_GROUP(), assignmentGroup);
+
+        public boolean test(CIPSOWAData cipSOWAData) {
+            boolean matchesHostName = matches(cipSOWAData.getHOST_NAME(), hostName);
+            boolean matchesHostIP = matches(cipSOWAData.getHOST_IP(), hostIP);
+            boolean matchesHostDomain = matches(cipSOWAData.getHOST_DOMAIN(), hostDomain);
+            boolean matchesSkeeperKE = matches(cipSOWAData.getSOWA_KE(), SOWA_KE);
+            boolean matchesSkeeperName = matches(cipSOWAData.getSOWA_NAME(), SOWAName);
+            boolean matchesAS_KE = matches(cipSOWAData.getAS_KE(), AS_KE);
+            boolean matchesASName = matches(cipSOWAData.getAS_NAME(), ASName);
+            boolean matchesCreatedByDate = matches(cipSOWAData.getCREATED_BY_DATE(), CreatedByDate);
+            boolean matchesHostKE = matches(cipSOWAData.getHOST_KE(), hostKE);
+            boolean matchesOSAdmin = matches(cipSOWAData.getOS_ADMIN(), OSAdmin);
+            boolean matchesAssignmentGroup = matches(cipSOWAData.getASSIGNMENT_GROUP(), assignmentGroup);
+            boolean matchesEnvironment = matches(cipSOWAData.getENVIRONMENT(), environment);
 
             return matchesHostName && matchesHostIP && matchesHostDomain && matchesSkeeperKE && matchesSkeeperName &&
                     matchesAS_KE && matchesASName && matchesCreatedByDate && matchesHostKE && matchesOSAdmin
-                    && matchesAssignmentGroup;
+                    && matchesAssignmentGroup && matchesEnvironment;
         }
 
         private boolean matches(String value, String searchTerm) {
@@ -491,7 +454,7 @@ public class SkeeperView extends VerticalLayout {
             setOpenOnClick(true);
         }
 
-        void addColumnToggleItem(String label, Grid.Column<CIPSkeeperData> column) {
+        void addColumnToggleItem(String label, Grid.Column<CIPSOWAData> column) {
             MenuItem menuItem = this.addItem(label, e -> {
                 column.setVisible(e.getSource().isChecked());
             });
@@ -501,8 +464,8 @@ public class SkeeperView extends VerticalLayout {
     }
 
 
-    public static class ItemContextMenu extends GridContextMenu<CIPSkeeperData> {
-        public ItemContextMenu(Grid<CIPSkeeperData> target) {
+    public static class ItemContextMenu extends GridContextMenu<CIPSOWAData> {
+        public ItemContextMenu(Grid<CIPSOWAData> target) {
             super(target);
 
             addItem("Открыть в Service Manager", e -> e.getItem().ifPresent(server -> {

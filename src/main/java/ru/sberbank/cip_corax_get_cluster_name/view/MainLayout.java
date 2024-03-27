@@ -3,15 +3,13 @@ package ru.sberbank.cip_corax_get_cluster_name.view;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.AnchorTarget;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import ru.sberbank.cip_corax_get_cluster_name.security.SecurityService;
+import ru.sberbank.cip_corax_get_cluster_name.view.analitics.Analitics;
 
 
 public class MainLayout extends AppLayout {
@@ -54,6 +52,10 @@ public class MainLayout extends AppLayout {
                 new RouterLink("Серверы SIDEC выданные из ДИ за период", SidecView.class)
                 ,
                 new RouterLink("Серверы Skeeper выданные из ДИ за период", SkeeperView.class)
+                ,
+                new RouterLink("Серверы SOWA выданные из ДИ за период", SOWAView.class)
+                ,
+                new RouterLink("Аналитика по серверам выданных из ДИ за период", Analitics.class)
 //                new Anchor("https://google.com", "Аналитика", AnchorTarget.BLANK)
         ));
     }
